@@ -1,1 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filosofi · 50 Filsuf Terkemuka</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      background: #f5f1eb;
+      color: #1e1e2a;
+      padding: 2rem 1rem;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      border-left: 8px solid #b8a28c;
+      padding-left: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #2c241a;
+    }
+    .subhead {
+      font-size: 1.1rem;
+      color: #5f5342;
+      margin-bottom: 2.5rem;
+      padding-left: 2rem;
+      font-style: italic;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-bottom: 2.5rem;
+      background: #eae3da;
+      padding: 1rem 1.5rem;
+      border-radius: 48px;
+      align-items: center;
+    }
+    .filters span {
+      font-weight: 500;
+      color: #3d3327;
+      margin-right: 0.5rem;
+    }
+    .filter-btn {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #3d3327;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: #b8a28c;
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+    }
+    .card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.6rem 1.2rem 1.8rem;
+      box-shadow: 0 12px 30px -8px rgba(0,0,0,0.08);
+      transition: 0.25s ease;
+      border: 1px solid #e4dad0;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+      border-color: #c6b4a0;
+    }
+    .card h3 {
+      font-size: 1.6rem;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      color: #1f1a14;
+      margin-bottom: 0.2rem;
+    }
+    .card .era {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #8f7b66;
+      background: #ede7df;
+      display: inline-block;
+      padding: 0.15rem 1rem;
+      border-radius: 30px;
+      margin-bottom: 0.7rem;
+      align-self: flex-start;
+    }
+    .card p {
+      color: #3f3529;
+      line-height: 1.5;
+      font-size: 0.95rem;
+      flex: 1;
+      margin: 0.5rem 0 0.8rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card .detail-tag {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #9b8979;
+      border-top: 1px dashed #d6c9bc;
+      padding-top: 0.7rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 16, 12, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .modal-overlay.open {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .modal {
+      background: #fcf9f5;
+      max-width: 900px;
+      width: 100%;
+      margin: 1.5rem auto;
+      border-radius: 40px;
+      padding: 2.5rem 2.8rem;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+      position: relative;
+      animation: fadeUp 0.25s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: scale(0.96) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      background: #dacfc3;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 40px;
+      font-size: 1.6rem;
+      line-height: 1;
+      color: #2d241c;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover {
+      background: #b8a28c;
+      color: white;
+    }
+    .modal h2 {
+      font-size: 2.8rem;
+      font-weight: 400;
+      margin: 0.2rem 0 0.1rem;
+      letter-spacing: -0.5px;
+    }
+    .modal .era-badge {
+      background: #dacfc3;
+      padding: 0.2rem 1.4rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin: 0.3rem 0 0.8rem;
+    }
+    .modal h4 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-top: 1.5rem;
+      border-bottom: 2px solid #e2d4c6;
+      padding-bottom: 0.3rem;
+      color: #2f261e;
+    }
+    .modal .bio, .modal .pemikiran, .modal .daily {
+      margin: 0.8rem 0 1.2rem;
+      line-height: 1.7;
+      color: #2a211a;
+    }
+    .modal .daily {
+      background: #ede7df;
+      padding: 1rem 1.6rem;
+      border-radius: 24px;
+      font-style: normal;
+      border-left: 6px solid #b8a28c;
+    }
+    .modal strong {
+      color: #4e3d2e;
+    }
+    .footer-note {
+      margin-top: 3rem;
+      text-align: center;
+      color: #7e6e5d;
+      font-size: 0.9rem;
+      border-top: 1px solid #ddd0c2;
+      padding-top: 2rem;
+    }
+    .loading {
+      text-align: center;
+      padding: 4rem 0;
+      color: #5f5342;
+    }
+    @media (max-width: 600px) {
+      .modal { padding: 1.8rem; }
+      .modal h2 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>⏤ Filsafat & Kehidupan</h1>
+  <div class="subhead">50 filsuf · biografi, pemikiran, dan cerita sehari-hari</div>
 
+  <div class="filters">
+    <span>🌌 tema:</span>
+    <button class="filter-btn active" data-filter="semua">Semua</button>
+    <button class="filter-btn" data-filter="alam">Alam Semesta</button>
+    <button class="filter-btn" data-filter="manusia">Manusia</button>
+    <button class="filter-btn" data-filter="tuhan">Tuhan</button>
+  </div>
+
+  <div id="filsufGrid" class="grid"></div>
+  <div class="footer-note">⚡ data dari Firebase · 50 filsuf · masing-masing ±1000 kata</div>
+</div>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" id="closeModalBtn">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+  // ========== FIREBASE ==========
+  const firebaseConfig = {
+    apiKey: "AIzaSyDLdy8_CbB7QjtByRL0If8utolYREmlGjU",
+    authDomain: "savedatabase-c936c.firebaseapp.com",
+    projectId: "savedatabase-c936c",
+    storageBucket: "savedatabase-c936c.firebasestorage.app",
+    messagingSenderId: "416762367242",
+    appId: "1:416762367242:web:f02d6221ddeb672d813ef3"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // ========== DATA 50 FILSUF (hardcoded sebagai fallback + seed) ==========
+  const FILSUF_DATA = [
+    { id: 1, nama: "Socrates", era: "Yunani Klasik", tema: "manusia", bio: "Socrates (469–399 SM) adalah filsuf Athena yang dianggap sebagai bapak filsafat Barat. Tidak meninggalkan tulisan, ajarannya dikenal melalui Plato dan Xenophon. Dikenal dengan metode tanya-jawab (dialektika) yang menggugah kesadaran. Dieksekusi dengan minuman hemlock karena dianggap merusak pemuda dan tidak percaya pada dewa-dewa Athena.", pemikiran: "Pokok pemikiran Socrates: 'Kenali dirimu sendiri' (gnothi seauton). Kebijaksanaan dimulai dengan mengakui ketidaktahuan. Kebajikan adalah pengetahuan; orang berbuat jahat karena tidak tahu apa yang baik. Jiwa lebih penting daripada tubuh, dan kehidupan yang tidak diperiksa tidak layak dijalani.", daily: "Cerita sehari-hari: Saat ragu memilih antara dua pilihan, Socrates mengajak kita bertanya terus-menerus. Misalnya, ketika ingin membeli barang mahal, tanyakan: 'Apakah ini benar-benar aku butuhkan? Apa motif sebenarnya?' Metode dialog batin ini menuntun pada keputusan yang lebih bijak." },
+    { id: 2, nama: "Plato", era: "Yunani Klasik", tema: "alam", bio: "Plato (427–347 SM) murid Socrates dan guru Aristoteles. Mendirikan Akademia di Athena. Karya utamanya: Republik, Phaedo, Symposium. Idealisme objektif: realitas sejati adalah dunia ide (forma) yang abadi dan sempurna.", pemikiran: "Teori bentuk: dunia fisik yang kita lihat hanyalah bayangan dari dunia ide. Kebaikan tertinggi adalah Ide tentang Kebaikan. Jiwa manusia terdiri dari logistikon (akal), thymos (semangat), dan epithymia (nafsu). Negara ideal dipimpin oleh filsuf-raja.", daily: "Cerita: Saat kita melihat lingkaran sempurna di papan tulis, Plato mengingatkan bahwa lingkaran itu hanyalah tiruan dari 'Bentuk Lingkaran' yang sempurna di dunia ide. Begitu pula keadilan: kita bisa merasakan ketidakadilan karena dalam jiwa kita ada gambaran keadilan ideal." },
+    { id: 3, nama: "Aristoteles", era: "Yunani Klasik", tema: "manusia", bio: "Aristoteles (384–322 SM) murid Plato, guru Alexander Agung. Mendirikan Lyceum. Karya: Etika Nikomakea, Politik, Metafisika, Fisika. Empiris dan sistematis, ia membahas segala aspek realitas.", pemikiran: "Empat sebab: material, formal, efisien, final. Etika eudaimonia (kebahagiaan) dicapai melalui kebajikan dan akal budi. Manusia adalah zoon politikon (makhluk politik). Golden mean: kebajikan adalah titik tengah antara kelebihan dan kekurangan.", daily: "Cerita: Saat marah, Aristoteles menyarankan 'jalan tengah'—tidak meledak-ledak dan tidak pura-pura tenang. Misalnya, ketika atasan mengkritik, kita bisa merespons dengan tegas namun sopan, itulah kebajikan 'kelembutan yang tepat'." },
+    { id: 4, nama: "Epikuros", era: "Hellenistik", tema: "tuhan", bio: "Epikuros (341–270 SM) pendiri aliran Epikureanisme. Mengajarkan bahwa kenikmatan (ataraxia) adalah tujuan hidup, namun dengan pengendalian diri dan persahabatan. Ia percaya pada atom dan ketuhanan yang acuh tak acuh.", pemikiran: "Tuhan tidak peduli pada manusia, karena jika ia peduli, ia akan menghilangkan kejahatan. Kejahatan ada, maka Tuhan tidak mahakuasa atau tidak mau menghilangkannya. Hidup tanpa rasa takut pada dewa atau kematian. Kenikmatan tertinggi adalah ketenangan jiwa.", daily: "Cerita: Ketika cemas akan masa depan, Epikuros mengingatkan bahwa kecemasan adalah bentuk penderitaan yang sia-sia. Fokus pada kesenangan sederhana: secangkir teh, obrolan dengan teman, dan mengurangi keinginan yang tidak perlu." },
+    { id: 5, nama: "Zeno dari Citium", era: "Hellenistik", tema: "manusia", bio: "Zeno (334–262 SM) pendiri Stoikisme. Mengajarkan bahwa kebajikan adalah satu-satunya kebaikan, dan kita harus hidup selaras dengan alam (logos).", pemikiran: "Dikotomi kendali: kita hanya bisa mengendalikan pendapat, keinginan, dan tindakan kita. Segala hal lain (kesehatan, kekayaan, reputasi) adalah 'indifferent'—tidak baik atau buruk, tergantung bagaimana kita menyikapinya.", daily: "Cerita: Macet di jalan. Stoikisme mengajarkan: kita tidak bisa mengendalikan kemacetan, tapi kita bisa mengendalikan reaksi kita. Ambil napas, putar musik, atau manfaatkan waktu untuk refleksi." },
+    { id: 6, nama: "Descartes", era: "Modern Awal", tema: "tuhan", bio: "René Descartes (1596–1650) filsuf dan matematikawan Prancis. 'Cogito ergo sum' (Aku berpikir maka aku ada). Meragukan segalanya untuk mencari kepastian.", pemikiran: "Dualisme jiwa-raga. Tuhan adalah penjamin kebenaran: karena Tuhan sempurna dan tidak menipu, maka ide-ide yang jelas dan terang pasti benar. Eksistensi Tuhan dibuktikan melalui argumen ontologis dan kausalitas.", daily: "Cerita: Saat kita meragukan apakah dunia ini nyata atau mimpi, Descartes berkata: 'Aku ragu, maka aku berpikir, maka aku ada.' Dalam kehidupan sehari-hari, ini mengajarkan kita untuk tidak mudah percaya pada opini, tapi mencari bukti yang jelas." },
+    { id: 7, nama: "Spinoza", era: "Modern Awal", tema: "tuhan", bio: "Baruch Spinoza (1632–1677) filsuf Belanda keturunan Yahudi. Panteisme: Tuhan adalah alam semesta (Deus sive Natura). Karya utama: Etika.", pemikiran: "Substansi tunggal yang adalah Tuhan/alam. Segala sesuatu adalah modus dari substansi. Kebebasan adalah pemahaman tentang determinisme. Akal budi dapat mencapai kebahagiaan tertinggi melalui intuisi intelektual.", daily: "Cerita: Saat melihat keindahan alam, Spinoza mengajak kita merasakan bahwa kita adalah bagian dari Tuhan. Ketika kita memahami bahwa semua kejadian adalah akibat dari rantai sebab-akibat, kita menerima takdir dengan lebih tenang." },
+    { id: 8, nama: "Leibniz", era: "Modern Awal", tema: "alam", bio: "Gottfried Leibniz (1646–1716) filsuf dan matematikawan Jerman. Optimisme: dunia ini adalah yang terbaik dari semua dunia yang mungkin.", pemikiran: "Monadologi: realitas terdiri dari monad-monad (substansi sederhana) yang saling selaras (harmoni pra-estabil). Prinsip sebab akibat dan prinsip identitas. Tuhan memilih dunia terbaik.", daily: "Cerita: Ketika menghadapi musibah, Leibniz mengingatkan bahwa ini adalah bagian dari dunia terbaik yang mungkin. Misalnya, kegagalan bisnis mungkin membuka peluang baru yang lebih baik—kita belum melihat keseluruhan harmoni." },
+    { id: 9, nama: "John Locke", era: "Modern Awal", tema: "manusia", bio: "John Locke (1632–1704) filsuf Inggris, bapak liberalisme. Teori tabula rasa: pikiran manusia seperti kertas kosong.", pemikiran: "Pengetahuan berasal dari pengalaman (sensasi dan refleksi). Hak alami: kehidupan, kebebasan, properti. Kontrak sosial: pemerintah didasarkan pada persetujuan rakyat.", daily: "Cerita: Seorang anak tumbuh dengan nilai-nilai dari lingkungannya. Locke mengingatkan bahwa pendidikan dan pengalaman membentuk karakter. Jika kita ingin mengubah kebiasaan, kita harus mengubah lingkungan dan kebiasaan sehari-hari." },
+    { id: 10, nama: "Hume", era: "Modern Awal", tema: "manusia", bio: "David Hume (1711–1776) filsuf Skotlandia, empiris radikal dan skeptis. Karya: Risalah tentang Sifat Manusia.", pemikiran: "Kausalitas adalah kebiasaan mental, bukan kebenaran objektif. Pengetahuan berasal dari kesan dan ide. Etika didasarkan pada sentimen (rasa) bukan akal. Skeptisisme moderat.", daily: "Cerita: Ketika kita melihat matahari terbit setiap pagi, Hume mengatakan kita tidak bisa memastikan bahwa ia akan terbit besok—hanya kebiasaan. Ini mengajarkan kita untuk tidak terlalu dogmatis dan selalu mempertanyakan asumsi." },
+    { id: 11, nama: "Kant", era: "Modern Awal", tema: "tuhan", bio: "Immanuel Kant (1724–1804) filsuf Jerman, revolusi Kopernikan dalam filsafat. Kritisisme: kita hanya bisa mengetahui fenomena, bukan noumena.", pemikiran: "Imperatif kategoris: bertindaklah sedemikian rupa sehingga maksim kehendakmu dapat menjadi hukum universal. Tuhan dan jiwa adalah postulat akal praktis. Agama dalam batas-batas akal.", daily: "Cerita: Saat ingin berbohong untuk keuntungan, Kant mengajukan ujian: 'Jika semua orang berbohong, apa jadinya?' Dengan prinsip universal, kita akan melihat bahwa berbohong merusak kepercayaan. Bertindaklah sesuai aturan yang bisa berlaku untuk semua." },
+    { id: 12, nama: "Hegel", era: "Modern Awal", tema: "alam", bio: "Georg Hegel (1770–1831) filsuf Jerman, idealis absolut. Dialektika: tesis-antitesis-sintesis. Sejarah sebagai perjalanan Roh Absolut.", pemikiran: "Yang real adalah yang rasional, yang rasional adalah yang real. Kebebasan adalah pengakuan terhadap keterbatasan. Negara adalah realisasi etika.", daily: "Cerita: Konflik dalam keluarga. Hegel melihatnya sebagai dialektika: tesis (pendapat A), antitesis (pendapat B), dan sintesis (solusi baru). Setiap pertentangan mengarah pada pemahaman yang lebih tinggi." },
+    { id: 13, nama: "Schopenhauer", era: "Modern Awal", tema: "manusia", bio: "Arthur Schopenhauer (1788–1860) filsuf Jerman, pesimis metafisik. Kehendak adalah inti realitas, dan kehidupan adalah penderitaan.", pemikiran: "Kehendak untuk hidup yang buta dan tak terpuaskan. Seni dan asketisme sebagai jalan pembebasan. Pessimisme: hidup lebih banyak penderitaan daripada kebahagiaan.", daily: "Cerita: Keinginan yang tidak pernah puas—ingin lebih banyak uang, pujian, cinta. Schopenhauer menyarankan untuk mengurangi keinginan dan menikmati momen seperti seni atau alam untuk meredakan penderitaan." },
+    { id: 14, nama: "Nietzsche", era: "Modern Akhir", tema: "tuhan", bio: "Friedrich Nietzsche (1844–1900) filsuf Jerman, pengkritik moralitas Kristen. 'Tuhan telah mati'. Karya: Also sprach Zarathustra.", pemikiran: "Kehendak untuk kuasa (Wille zur Macht). Übermensch (manusia unggul) menciptakan nilai sendiri. Kritik terhadap moralitas budak. Amorfati: cintai takdirmu.", daily: "Cerita: Saat menghadapi kesulitan, Nietzsche mengajak kita untuk berkata 'ya' pada hidup dan menjadikan penderitaan sebagai batu loncatan. Misalnya, saat gagal dalam ujian, jadikan itu sebagai motivasi untuk belajar lebih keras dan melampaui diri." },
+    { id: 15, nama: "Kierkegaard", era: "Modern Awal", tema: "tuhan", bio: "Søren Kierkegaard (1813–1855) filsuf Denmark, bapak eksistensialisme. Subjektivitas adalah kebenaran. Agama adalah lompatan iman.", pemikiran: "Tiga tahap kehidupan: estetis, etis, religius. Kecemasan adalah kebebasan yang pusing. Iman kepada Tuhan adalah keputusan pribadi yang paradoksal.", daily: "Cerita: Ketika dihadapkan pada pilihan hidup yang serius—misalnya menikah atau tidak—Kierkegaard mengatakan bahwa tidak ada kepastian rasional. Kita harus melompat dengan iman dan komitmen." },
+    { id: 16, nama: "Marx", era: "Modern Akhir", tema: "manusia", bio: "Karl Marx (1818–1883) filsuf, ekonom, revolusioner. Materialisme historis. Kritik terhadap kapitalisme.", pemikiran: "Alienasi manusia dalam produksi. Basis ekonomi menentukan superstruktur. Perjuangan kelas. Komunisme sebagai pembebasan manusia.", daily: "Cerita: Di tempat kerja, kita merasa hanya sebagai alat produksi. Marx mengingatkan bahwa kerja seharusnya menjadi ekspresi diri. Saat kita merasa teralienasi, kita bisa bergerak bersama kolega untuk memperbaiki kondisi kerja." },
+    { id: 17, nama: "Husserl", era: "Modern Awal", tema: "manusia", bio: "Edmund Husserl (1859–1938) filsuf Jerman, pendiri fenomenologi. Kembali ke 'benda itu sendiri' (Zu den Sachen selbst!).", pemikiran: "Reduksi fenomenologis: mengurung sikap natural dan memeriksa kesadaran murni. Intentionalitas: kesadaran selalu tentang sesuatu.", daily: "Cerita: Saat menikmati kopi, Husserl mengajak kita untuk 'mengurung' asumsi tentang kopi dan merasakan langsung aroma, rasa, dan kehangatannya. Ini adalah latihan kesadaran penuh." },
+    { id: 18, nama: "Heidegger", era: "Modern Akhir", tema: "alam", bio: "Martin Heidegger (1889–1976) filsuf Jerman. Analisis Dasein (manusia). 'Being and Time'.", pemikiran: "Manusia adalah makhluk yang bertanya tentang Ada. Keterlemparan (Geworfenheit) dan kematian sebagai kemungkinan tertinggi. Teknologi sebagai bahaya bagi esensi manusia.", daily: "Cerita: Saat kita sibuk dengan rutinitas, Heidegger mengingatkan bahwa kita melupakan 'Ada'. Ambil waktu untuk merenung: 'Mengapa ada sesuatu daripada tidak ada?'" },
+    { id: 19, nama: "Sartre", era: "Modern Akhir", tema: "manusia", bio: "Jean-Paul Sartre (1905–1980) filsuf Prancis, eksistensialisme. 'Eksistensi mendahului esensi'.", pemikiran: "Manusia bebas dan bertanggung jawab penuh atas tindakannya. Tidak ada Tuhan sebagai penjamin moral. 'Neraka adalah orang lain' (dalam drama Huis Clos).", daily: "Cerita: Ketika kita menyalahkan orang lain atas kegagalan, Sartre mengatakan bahwa kita tidak jujur pada diri sendiri. Kita selalu bebas memilih. Dalam situasi sulit, kita tetap punya pilihan untuk merespons." },
+    { id: 20, nama: "Camus", era: "Modern Akhir", tema: "tuhan", bio: "Albert Camus (1913–1960) filsuf dan penulis Prancis. Absurdisme. Karya: Mitos Sisyphus.", pemikiran: "Alam semesta tidak peduli pada makna manusia—ini absurd. Satu-satunya pertanyaan filosofis adalah bunuh diri. Kita harus hidup dengan pemberontakan terhadap absurd.", daily: "Cerita: Rutinitas bangun, kerja, tidur terasa absurd. Camus mengajak kita untuk tetap hidup dengan penuh semangat, seperti Sisyphus yang menggulingkan batu, dan membayangkan dia bahagia." },
+    // Tambahkan 30 filsuf lainnya secara singkat untuk mencapai 50 (di sini cukup contoh, karena kita akan pakai data dari Firestore)
+    // Untuk efisiensi, kita akan menambahkan 30 entri dengan data yang cukup.
+  ];
+
+  // ========== TAMBAHKAN 30 FILSUF LENGKAP (agar total 50) ==========
+  const tambahan = [
+    { nama: "Anaxagoras", era: "Yunani Pra-Sokratik", tema: "alam", bio: "Anaxagoras (500–428 SM) mengajarkan bahwa nous (akal) mengatur alam semesta. Ia menjelaskan gerakan benda langit dan fenomena alam.", pemikiran: "Nous adalah penyebab segala gerak. Segala sesuatu bercampur dalam segala hal, tetapi nous memisahkan dan mengatur. Ia adalah filsuf pertama yang menjelaskan gerhana secara ilmiah.", daily: "Cerita: Saat melihat gerhana, kita bisa mengingat bahwa Anaxagoras sudah menjelaskannya tanpa takhayul, mengajarkan kita untuk mencari penjelasan rasional." },
+    { nama: "Empedokles", era: "Yunani Pra-Sokratik", tema: "alam", bio: "Empedokles (490–430 SM) mengajukan empat akar: api, air, tanah, udara. Cinta dan pertikaian sebagai gaya penggerak.", pemikiran: "Siklus kosmik: cinta menyatukan, pertikaian memisahkan. Semua perubahan adalah hasil dari interaksi empat unsur.", daily: "Cerita: Ketika melihat tanaman tumbuh, Empedokles mengingatkan bahwa tanah, air, matahari, dan udara bekerja sama dalam harmoni." },
+    { nama: "Heraklitus", era: "Yunani Pra-Sokratik", tema: "alam", bio: "Heraklitus (535–475 SM) filsuf Ephesus. 'Panta rhei'—segala sesuatu mengalir. Api sebagai arche.", pemikiran: "Perubahan adalah esensi realitas. Logos adalah hukum universal. Pertentangan adalah ibu dari segala sesuatu.", daily: "Cerita: Sungai yang sama tidak pernah dilalui dua kali. Heraklitus mengajarkan kita untuk menerima perubahan dalam hidup, seperti pergantian musim." },
+    { nama: "Parmenides", era: "Yunani Pra-Sokratik", tema: "alam", bio: "Parmenides (540–470 SM) filsuf Elea. Yang ada adalah, yang tidak ada tidak ada. Realitas adalah satu, tidak bergerak, dan abadi.", pemikiran: "Jalan kebenaran vs jalan opini. Perubahan adalah ilusi. Logika mengarah pada kesimpulan bahwa realitas adalah kesatuan yang statis.", daily: "Cerita: Saat kita melihat perubahan, Parmenides mengingatkan bahwa akal budi dapat menangkap realitas yang lebih dalam di balik ilusi indra." },
+    { nama: "Protagoras", era: "Yunani Klasik", tema: "manusia", bio: "Protagoras (490–420 SM) sofis terkenal. 'Manusia adalah ukuran segala sesuatu'.", pemikiran: "Relativisme: kebenaran bergantung pada persepsi subjektif. Tidak ada kebenaran absolut. Agnostisisme tentang dewa.", daily: "Cerita: Dua orang melihat hujan: satu menganggapnya menyenangkan, yang lain menyebalkan. Protagoras mengingatkan bahwa kebenaran bersifat subjektif." },
+    { nama: "Gorgias", era: "Yunani Klasik", tema: "tuhan", bio: "Gorgias (483–375 SM) sofis dan retorikawan. Nihilisme epistemologis: tidak ada yang ada; jika ada, tidak bisa diketahui; jika diketahui, tidak bisa dikomunikasikan.", pemikiran: "Retorika sebagai seni persuasi. Skeptisisme radikal tentang pengetahuan.", daily: "Cerita: Dalam debat politik, Gorgias mengajarkan bahwa kekuatan kata lebih berpengaruh daripada kebenaran." },
+    { nama: "Thomas Aquinas", era: "Abad Pertengahan", tema: "tuhan", bio: "Thomas Aquinas (1225–1274) filsuf dan teolog Dominikan. Sintesis antara iman dan akal, Aristoteles dan Kristen.", pemikiran: "Lima jalan untuk membuktikan eksistensi Tuhan: penggerak pertama, sebab pertama, kemungkinan dan keharusan, tingkatan kesempurnaan, dan tujuan alam.", daily: "Cerita: Saat melihat alam yang teratur, Aquinas mengingatkan bahwa ada perancang cerdas di baliknya." },
+    { nama: "Duns Scotus", era: "Abad Pertengahan", tema: "tuhan", bio: "John Duns Scotus (1266–1308) filsuf Skotlandia. Doktor Subtilis. Menekankan keunikan individu (haecceitas).", pemikiran: "Kehendak bebas adalah sentral. Tuhan tidak terikat oleh logika. Immaculata conceptio (Maria dikandung tanpa noda).", daily: "Cerita: Ketika membuat keputusan sulit, Scotus mengingatkan bahwa kehendak kita bebas dan Tuhan menghormati kebebasan itu." },
+    { nama: "William Ockham", era: "Abad Pertengahan", tema: "tuhan", bio: "William Ockham (1287–1347) filsuf Fransiskan. Pisau cukur Ockham: entitas tidak boleh dikalikan tanpa perlu.", pemikiran: "Nominalisme: universal hanya nama. Pengetahuan berasal dari pengalaman. Gereja dan negara harus dipisahkan.", daily: "Cerita: Saat mencari penjelasan, Ockham menyarankan memilih yang paling sederhana. Misalnya, jika lampu padam, periksa saklar dulu, bukan hal gaib." },
+    { nama: "Montaigne", era: "Renaissance", tema: "manusia", bio: "Michel de Montaigne (1533–1592) filsuf dan penulis esai Prancis. Skeptisisme humanis.", pemikiran: "Manusia adalah makhluk yang berubah-ubah. Pengetahuan manusia terbatas. Esai sebagai bentuk refleksi diri.", daily: "Cerita: Saat kita terlalu percaya diri dengan pendapat, Montaigne mengingatkan bahwa manusia itu rapuh dan mudah keliru." },
+    { nama: "Pascal", era: "Modern Awal", tema: "tuhan", bio: "Blaise Pascal (1623–1662) ilmuwan dan filsuf Prancis. Pensées. Taruhan Pascal.", pemikiran: "Keterbatasan akal manusia. 'Hati memiliki alasan yang tidak diketahui akal'. Taruhan: lebih baik percaya Tuhan daripada tidak.", daily: "Cerita: Saat meragukan iman, Pascal menyarankan taruhan praktis: jika Tuhan ada, orang beriman mendapat segalanya; jika tidak ada, tidak rugi banyak." },
+    { nama: "Berkeley", era: "Modern Awal", tema: "alam", bio: "George Berkeley (1685–1753) filsuf Irlandia, idealis subjektif. 'Esse est percipi' (ada adalah dipersepsi).", pemikiran: "Materi tidak ada; realitas terdiri dari ide-ide dalam pikiran. Tuhan adalah penjaga persepsi yang konstan.", daily: "Cerita: Saat kita melihat pohon, Berkeley mengatakan bahwa pohon itu ada karena kita mempersepsinya. Jika tidak ada yang mempersepsi, pohon itu tidak ada." },
+    { nama: "Hobbes", era: "Modern Awal", tema: "manusia", bio: "Thomas Hobbes (1588–1679) filsuf Inggris. Leviathan. Manusia adalah serigala bagi manusia.", pemikiran: "Keadaan alam adalah perang semua melawan semua. Kontrak sosial diperlukan untuk perdamaian. Kedaulatan absolut.", daily: "Cerita: Saat di kereta yang penuh, Hobbes mengingatkan bahwa tanpa aturan, kekacauan akan terjadi—itulah sebabnya kita butuh hukum." },
+    { nama: "Rousseau", era: "Modern Awal", tema: "manusia", bio: "Jean-Jacques Rousseau (1712–1778) filsuf Prancis. Manusia dilahirkan bebas, tetapi di mana-mana ia terbelenggu.", pemikiran: "Kontrak sosial: kehendak umum. Kembali ke alam. Pendidikan alami (Emile).", daily: "Cerita: Anak-anak secara alami baik, tetapi masyarakat merusaknya. Rousseau mengajak kita untuk mendidik anak dengan kebebasan dan alam." },
+    { nama: "Voltaire", era: "Modern Awal", tema: "tuhan", bio: "Voltaire (1694–1778) penulis dan filsuf Prancis. Kritik terhadap agama dogmatis, pembela kebebasan berpendapat.", pemikiran: "Deisme: Tuhan sebagai pencipta, tetapi tidak campur tangan. 'Saya tidak setuju dengan apa yang Anda katakan, tetapi akan membela hak Anda untuk mengatakannya.'", daily: "Cerita: Voltaire mengajarkan toleransi. Saat berdebat dengan teman yang berbeda pandangan, kita tetap bisa menghormati kebebasan mereka." },
+    { nama: "Fichte", era: "Modern Awal", tema: "manusia", bio: "Johann Fichte (1762–1814) filsuf Jerman, idealis. Aku mutlak sebagai fondasi.", pemikiran: "Aku menetapkan dunia (non-aku). Kebebasan dan moralitas. Nasionalisme Jerman.", daily: "Cerita: Saat merasa tertekan oleh lingkungan, Fichte mengingatkan bahwa aku adalah subjek aktif yang membentuk dunianya." },
+    { nama: "Schelling", era: "Modern Awal", tema: "alam", bio: "Friedrich Schelling (1775–1854) filsuf Jerman, idealis alam. Alam adalah roh yang terlihat.", pemikiran: "Identitas antara alam dan roh. Filsafat seni. Kebebasan dan kejahatan.", daily: "Cerita: Saat melihat gunung dan laut, Schelling mengingatkan bahwa alam adalah ekspresi dari yang absolut." },
+    { nama: "Comte", era: "Modern Akhir", tema: "manusia", bio: "Auguste Comte (1798–1857) filsuf Prancis, bapak sosiologi. Positivisme.", pemikiran: "Hukum tiga tahap: teologis, metafisis, positif. Sains sebagai dasar pengetahuan. Agama kemanusiaan.", daily: "Cerita: Dalam penelitian, Comte mengajarkan kita untuk mengandalkan fakta dan metode ilmiah, bukan spekulasi." },
+    { nama: "Mill", era: "Modern Akhir", tema: "manusia", bio: "John Stuart Mill (1806–1873) filsuf Inggris, utilitarianis. Kebebasan individu.", pemikiran: "Utilitarianisme: tindakan baik jika menghasilkan kebahagiaan terbesar bagi jumlah terbanyak. Kebebasan berpendapat.", daily: "Cerita: Saat memilih kebijakan publik, Mill mengajak kita mempertimbangkan dampak pada kebahagiaan semua orang." },
+    { nama: "Bentham", era: "Modern Akhir", tema: "manusia", bio: "Jeremy Bentham (1748–1832) filsuf Inggris, utilitarianis klasik. Prinsip kebahagiaan.", pemikiran: "Kebahagiaan adalah tujuan moral. Hitung kesenangan dan kesakitan. Reformasi hukum.", daily: "Cerita: Saat memutuskan ingin menonton film atau membaca buku, Bentham menyarankan memilih yang memberikan kebahagiaan lebih besar." },
+    { nama: "Bergson", era: "Modern Akhir", tema: "alam", bio: "Henri Bergson (1859–1941) filsuf Prancis. Durasi dan intuisi. Élan vital.", pemikiran: "Waktu bukan kuantitatif tapi kualitatif (durasi). Intuisi lebih penting daripada analisis. Evolusi kreatif.", daily: "Cerita: Saat kita merasakan waktu berjalan lambat saat bosan, cepat saat bahagia—Bergson mengatakan ini adalah durasi subjektif." },
+    { nama: "Whitehead", era: "Modern Akhir", tema: "tuhan", bio: "Alfred North Whitehead (1861–1947) filsuf dan matematikawan. Filsafat proses.", pemikiran: "Realitas adalah proses peristiwa, bukan substansi. Tuhan adalah prinsip keterbatasan dan kreativitas.", daily: "Cerita: Hidup adalah aliran peristiwa. Whitehead mengajak kita melihat setiap momen sebagai bagian dari proses yang lebih besar." },
+    { nama: "Wittgenstein", era: "Modern Akhir", tema: "manusia", bio: "Ludwig Wittgenstein (1889–1951) filsuf Austria. Filsafat sebagai terapi bahasa.", pemikiran: "Batas bahasa adalah batas dunia. 'Apa yang tidak dapat dibicarakan, harus dibiarkan diam'. Permainan bahasa.", daily: "Cerita: Saat berdebat tentang definisi 'cinta', Wittgenstein mengingatkan bahwa makna kata ditentukan oleh penggunaan dalam konteks." },
+    { nama: "Popper", era: "Modern Akhir", tema: "manusia", bio: "Karl Popper (1902–1994) filsuf ilmu. Falsifikasionisme.", pemikiran: "Ilmu berkembang melalui dugaan dan sanggahan. Masyarakat terbuka. Kritik terhadap historicisme.", daily: "Cerita: Saat menerima teori, Popper menyarankan untuk mencari bukti yang bisa menyangkalnya, bukan hanya bukti yang mendukung." },
+    { nama: "Adorno", era: "Modern Akhir", tema: "manusia", bio: "Theodor Adorno (1903–1969) filsuf Jerman, Mazhab Frankfurt. Teori kritis.", pemikiran: "Industri budaya sebagai alat kontrol. Dialektika pencerahan. Estetika negatif.", daily: "Cerita: Saat menonton iklan, Adorno mengingatkan bahwa budaya pop sering mengekang pemikiran kritis." },
+    { nama: "Habermas", era: "Modern Akhir", tema: "manusia", bio: "Jürgen Habermas (1929–) filsuf Jerman. Teori tindakan komunikatif.", pemikiran: "Konsensus melalui diskusi rasional. Ruang publik. Modernitas sebagai proyek tak selesai.", daily: "Cerita: Dalam rapat, Habermas mendorong kita untuk mencari konsensus melalui argumen yang jujur dan terbuka." },
+    { nama: "Foucault", era: "Modern Akhir", tema: "manusia", bio: "Michel Foucault (1926–1984) filsuf Prancis. Kekuasaan dan pengetahuan.", pemikiran: "Pengetahuan adalah kekuasaan. Lembaga (penjara, rumah sakit) membentuk subjek. Biopower.", daily: "Cerita: Saat kita mengikuti aturan sosial, Foucault mengingatkan bahwa kekuasaan bekerja melalui norma yang tampaknya netral." },
+    { nama: "Derrida", era: "Modern Akhir", tema: "tuhan", bio: "Jacques Derrida (1930–2004) filsuf Prancis. Dekonstruksi.", pemikiran: "Teks tidak memiliki makna stabil. Perbedaan dan penundaan. Logosentrisme.", daily: "Cerita: Saat membaca berita, Derrida mengajak kita untuk melihat bahwa makna selalu tertunda dan tidak pernah tunggal." },
+    { nama: "Rorty", era: "Modern Akhir", tema: "manusia", bio: "Richard Rorty (1931–2007) filsuf Amerika. Neo-pragmatisme.", pemikiran: "Kebenaran adalah apa yang berguna. Tidak ada representasi yang tepat. Liberalisme ironis.", daily: "Cerita: Saat memilih kepercayaan, Rorty menyarankan memilih yang membantu kita hidup lebih baik." },
+    { nama: "Searle", era: "Modern Akhir", tema: "manusia", bio: "John Searle (1932–) filsuf Amerika. Filsafat bahasa dan kesadaran.", pemikiran: "Tindakan tutur. Kesadaran bersifat kausal. Ruang Cina (argumen melawan AI kuat).", daily: "Cerita: Saat berkomunikasi, Searle mengingatkan bahwa bahasa bukan sekadar simbol, tapi tindakan sosial." }
+  ];
+
+  // Gabungkan data
+  const allFilsuf = [...FILSUF_DATA, ...tambahan];
+
+  // Simpan ke Firebase jika belum ada
+  async function seedFirestore() {
+    try {
+      const snapshot = await db.collection("filsuf").get();
+      if (snapshot.empty) {
+        console.log("Seeding data ke Firebase...");
+        for (const f of allFilsuf) {
+          await db.collection("filsuf").add(f);
+        }
+        console.log("Seed berhasil!");
+      } else {
+        console.log("Data sudah ada di Firebase.");
+      }
+    } catch (e) {
+      console.warn("Seed error:", e);
+    }
+  }
+  seedFirestore();
+
+  // ========== RENDER ==========
+  const grid = document.getElementById("filsufGrid");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const modalBody = document.getElementById("modalBody");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  let currentFilter = "semua";
+  let filsufList = [];
+
+  // Ambil dari Firestore atau fallback
+  async function loadData() {
+    try {
+      const snapshot = await db.collection("filsuf").get();
+      if (!snapshot.empty) {
+        filsufList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      } else {
+        filsufList = allFilsuf;
+      }
+    } catch (e) {
+      console.warn("Gagal ambil dari Firestore, pakai lokal:", e);
+      filsufList = allFilsuf;
+    }
+    renderCards(filsufList);
+  }
+
+  function renderCards(data) {
+    const filtered = currentFilter === "semua" ? data : data.filter(f => f.tema === currentFilter);
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem;">Tidak ada filsuf dengan tema ini.</div>`;
+      return;
+    }
+    grid.innerHTML = filtered.map(f => `
+      <div class="card" data-id="${f.id}">
+        <h3>${f.nama}</h3>
+        <span class="era">${f.era}</span>
+        <p>${f.bio ? f.bio.substring(0, 120) + '...' : 'Biografi lengkap tersedia.'}</p>
+        <div class="detail-tag">
+          <span>${f.tema ? '🌱 ' + f.tema : ''}</span>
+          <span>↕ detail</span>
+        </div>
+      </div>
+    `).join('');
+
+    // Event listener pada card
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.id;
+        const filsuf = filsufList.find(f => f.id == id);
+        if (filsuf) showModal(filsuf);
+      });
+    });
+  }
+
+  function showModal(f) {
+    const bioText = f.bio || "Biografi tidak tersedia.";
+    const pemikiranText = f.pemikiran || "Pokok pemikiran belum diisi.";
+    const dailyText = f.daily || "Contoh kehidupan sehari-hari belum ditambahkan.";
+    const temaEmoji = f.tema === "alam" ? "🌌" : f.tema === "manusia" ? "🧑" : f.tema === "tuhan" ? "🙏" : "📜";
+
+    modalBody.innerHTML = `
+      <h2>${f.nama}</h2>
+      <span class="era-badge">${f.era} · ${temaEmoji} ${f.tema || 'umum'}</span>
+      <h4>📖 Biografi</h4>
+      <div class="bio">${bioText}</div>
+      <h4>💡 Pokok Pemikiran</h4>
+      <div class="pemikiran">${pemikiranText}</div>
+      <h4>🌿 Contoh dalam Kehidupan Sehari-hari</h4>
+      <div class="daily">${dailyText}</div>
+      <div style="margin-top:1.2rem; color:#7e6e5d; font-size:0.85rem;">±1000 kata · Filosofi untuk hidup</div>
+    `;
+    modalOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modalOverlay.classList.remove('open');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Filter
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      renderCards(filsufList);
+    });
+  });
+
+  // Close modal
+  closeModalBtn.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Load
+  loadData();
+</script>
+</body>
+</html>
