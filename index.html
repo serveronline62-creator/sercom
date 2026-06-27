@@ -6,12 +6,8 @@
     <title>SecureFile · Excel & PDF Vault</title>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Font (Inter) -->
+    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -21,7 +17,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f4f7fc;
+            background: #f0f4fa;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -32,14 +28,11 @@
         .card {
             max-width: 1100px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border-radius: 40px;
+            background: #ffffff;
+            border-radius: 32px;
             padding: 2.5rem 2.8rem;
-            box-shadow: 0 20px 50px rgba(0, 20, 40, 0.12), 0 8px 24px rgba(0, 20, 40, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 20, 40, 0.10), 0 8px 24px rgba(0, 20, 40, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            transition: all 0.25s ease;
         }
 
         h1 {
@@ -59,7 +52,7 @@
             align-items: center;
             flex-wrap: wrap;
             margin-bottom: 2.2rem;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
+            border-bottom: 1px solid #eef3f9;
             padding-bottom: 1rem;
         }
 
@@ -81,18 +74,17 @@
 
         .storage-badge {
             display: flex;
-            gap: 18px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .badge {
-            background: white;
+            background: #f8faff;
             border-radius: 60px;
-            padding: 0.35rem 1.3rem;
+            padding: 0.35rem 1.2rem;
             font-size: 0.8rem;
             font-weight: 600;
             color: #1a314b;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             border: 1px solid #dce5ef;
             display: flex;
             align-items: center;
@@ -103,18 +95,14 @@
             color: #1e7bcf;
         }
 
-        .badge.github i {
-            color: #24292e;
-        }
-
-        .badge.firebase i {
-            color: #f7b731;
+        .badge.local i {
+            color: #28a745;
         }
 
         .upload-zone {
             background: #f8faff;
             border: 2px dashed #c8d6e8;
-            border-radius: 32px;
+            border-radius: 28px;
             padding: 2.2rem 1.8rem;
             text-align: center;
             transition: 0.2s;
@@ -199,6 +187,17 @@
             transform: none;
         }
 
+        .btn-danger {
+            background: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            border-color: #c82333;
+        }
+
         .file-list-header {
             display: flex;
             justify-content: space-between;
@@ -230,20 +229,20 @@
         }
 
         .file-item {
-            background: white;
+            background: #fafdff;
             padding: 0.9rem 1.4rem;
-            border-radius: 24px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             border: 1px solid #e5edf6;
             transition: 0.15s;
         }
 
         .file-item:hover {
-            background: #fafdff;
+            background: #ffffff;
             border-color: #c5d6ea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .file-info {
@@ -251,6 +250,7 @@
             align-items: center;
             gap: 14px;
             overflow: hidden;
+            flex: 1;
         }
 
         .file-info i {
@@ -278,11 +278,13 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
         }
 
         .file-actions {
             display: flex;
-            gap: 6px;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
         .file-actions button {
@@ -336,6 +338,7 @@
             transition: 0.3s cubic-bezier(0.22, 0.68, 0, 1);
             z-index: 999;
             border: 1px solid rgba(255,255,255,0.08);
+            max-width: 90%;
         }
 
         .toast.show {
@@ -366,43 +369,46 @@
             to { transform: rotate(360deg); }
         }
 
+        .clear-all-btn {
+            background: transparent;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .clear-all-btn:hover {
+            background: #dc3545;
+            color: white;
+        }
+
         @media (max-width: 650px) {
             .card { padding: 1.5rem; }
             .subhead { flex-direction: column; align-items: start; gap: 12px; }
             .file-info .file-name { max-width: 120px; }
-        }
-
-        .debug-console {
-            margin-top: 20px;
-            padding: 12px;
-            background: #1a1a2e;
-            color: #00ff41;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-            display: none;
-        }
-        .debug-console.show {
-            display: block;
+            .file-info .file-meta { display: none; }
+            .file-info .file-meta:first-of-type { display: inline-flex; }
         }
     </style>
 </head>
 <body>
 
-<div class="card" id="app">
+<div class="card">
     <div class="subhead">
         <div>
             <h1><i class="fas fa-folder-open" style="color: #1f6fb5;"></i> Vault</h1>
             <p><i class="fas fa-shield-alt"></i> Excel · PDF only</p>
         </div>
         <div class="storage-badge">
-            <span class="badge github"><i class="fab fa-github"></i> GitHub</span>
-            <span class="badge firebase"><i class="fas fa-database"></i> Firebase</span>
+            <span class="badge local"><i class="fas fa-database"></i> Local Storage</span>
+            <span class="badge"><i class="fas fa-sync"></i> Auto-save</span>
         </div>
     </div>
 
+    <!-- Upload area -->
     <div class="upload-zone" id="dropZone">
         <i class="fas fa-cloud-upload-alt"></i>
         <h3>Seret & letakkan file</h3>
@@ -413,9 +419,15 @@
         </div>
     </div>
 
+    <!-- File list -->
     <div class="file-list-header">
         <h2><i class="fas fa-list-ul"></i> File tersimpan</h2>
-        <span style="font-size:0.85rem; color:#3c5a79;" id="fileCount">0 file</span>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size:0.85rem; color:#3c5a79;" id="fileCount">0 file</span>
+            <button class="clear-all-btn" id="clearAllBtn" style="display: none;">
+                <i class="fas fa-trash"></i> Hapus Semua
+            </button>
+        </div>
     </div>
 
     <div class="file-grid" id="fileGrid">
@@ -424,65 +436,18 @@
             <p>Belum ada file. Unggah Excel atau PDF.</p>
         </div>
     </div>
-
-    <!-- Debug Console -->
-    <div class="debug-console" id="debugConsole">
-        <strong>📋 Debug Log:</strong><br>
-        <div id="debugLog"></div>
-    </div>
 </div>
 
+<!-- Toast notification -->
 <div id="toast" class="toast">
     <i class="fas fa-check-circle"></i>
     <span id="toastMessage">File berhasil disimpan</span>
 </div>
 
 <script>
-    // ========== DEBUG FUNCTION ==========
-    function debugLog(message) {
-        const logDiv = document.getElementById('debugLog');
-        const time = new Date().toLocaleTimeString();
-        logDiv.innerHTML += `[${time}] ${message}<br>`;
-        document.getElementById('debugConsole').classList.add('show');
-        console.log(`[DEBUG] ${message}`);
-    }
-
-    // ========== FIREBASE CONFIG ==========
-    const firebaseConfig = {
-        apiKey: "AIzaSyDLdy8_CbB7QjtByRL0If8utolYREmlGjU",
-        authDomain: "savedatabase-c936c.firebaseapp.com",
-        projectId: "savedatabase-c936c",
-        storageBucket: "savedatabase-c936c.firebasestorage.app",
-        messagingSenderId: "416762367242",
-        appId: "1:416762367242:web:f02d6221ddeb672d813ef3"
-    };
-
-    debugLog('Firebase Config loaded');
-
-    // Initialize Firebase
-    try {
-        firebase.initializeApp(firebaseConfig);
-        debugLog('Firebase initialized successfully');
-    } catch (error) {
-        debugLog('❌ Firebase initialization error: ' + error.message);
-        showToast('Gagal inisialisasi Firebase: ' + error.message, true);
-    }
-
-    const storage = firebase.storage();
-    const db = firebase.firestore();
-
-    // Test Firestore connection
-    async function testFirestore() {
-        try {
-            await db.collection('test').doc('test').set({ test: true });
-            debugLog('✅ Firestore connection successful');
-            await db.collection('test').doc('test').delete();
-        } catch (error) {
-            debugLog('❌ Firestore connection failed: ' + error.message);
-            showToast('Gagal koneksi ke Firestore: ' + error.message, true);
-        }
-    }
-    testFirestore();
+    // ========== CONFIG ==========
+    const STORAGE_KEY = 'vault_files_data';
+    const MAX_SIZE = 20 * 1024 * 1024; // 20MB
 
     // ========== DOM REFS ==========
     const fileInput = document.getElementById('fileInput');
@@ -493,6 +458,7 @@
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
     const uploadBtn = document.getElementById('uploadBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
 
     // ========== UTILITY ==========
     function formatSize(bytes) {
@@ -515,6 +481,10 @@
         return 'File';
     }
 
+    function generateId() {
+        return Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+    }
+
     // ========== TOAST ==========
     function showToast(msg, isError = false) {
         toastMessage.textContent = msg;
@@ -529,67 +499,68 @@
         clearTimeout(toast._timer);
         toast._timer = setTimeout(() => {
             toast.classList.remove('show');
-        }, 5000);
+        }, 3000);
     }
 
-    // ========== LOAD FILES FROM FIRESTORE ==========
-    async function loadFiles() {
-        debugLog('Loading files from Firestore...');
+    // ========== STORAGE OPERATIONS ==========
+    function getFiles() {
         try {
-            const snapshot = await db.collection('files')
-                .orderBy('uploadedAt', 'desc')
-                .get();
-            
-            debugLog(`Found ${snapshot.size} files`);
-            const files = [];
-            snapshot.forEach(doc => {
-                files.push({
-                    id: doc.id,
-                    ...doc.data()
-                });
-            });
-            
-            renderFileList(files);
-            return files;
-        } catch (error) {
-            debugLog('❌ Error loading files: ' + error.message);
-            showToast('Gagal memuat file dari Firebase: ' + error.message, true);
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return [];
+            return JSON.parse(raw);
+        } catch {
             return [];
         }
     }
 
+    function saveFiles(files) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(files));
+        renderFileList();
+    }
+
+    function clearAllFiles() {
+        if (confirm('Hapus semua file?')) {
+            saveFiles([]);
+            showToast('Semua file dihapus');
+        }
+    }
+
     // ========== RENDER ==========
-    function renderFileList(files) {
+    function renderFileList() {
+        const files = getFiles();
         fileGrid.innerHTML = '';
         
-        if (!files || files.length === 0) {
+        if (files.length === 0) {
             fileGrid.appendChild(emptyState);
             fileCount.textContent = '0 file';
+            clearAllBtn.style.display = 'none';
             return;
         }
         
         fileCount.textContent = files.length + ' file' + (files.length > 1 ? 's' : '');
+        clearAllBtn.style.display = 'inline-block';
 
-        files.forEach((file) => {
+        files.forEach((file, index) => {
             const item = document.createElement('div');
             item.className = 'file-item';
 
-            const icon = getFileIcon(file.fileName);
-            const typeLabel = getFileTypeLabel(file.fileName);
+            const icon = getFileIcon(file.name);
+            const typeLabel = getFileTypeLabel(file.name);
+            const uploadDate = new Date(file.uploadedAt).toLocaleDateString('id-ID');
 
             item.innerHTML = `
                 <div class="file-info">
                     <i class="fas ${icon}"></i>
-                    <span class="file-name" title="${file.fileName}">${file.fileName}</span>
-                    <span class="file-meta"><i class="fas fa-hdd"></i> ${formatSize(file.fileSize)}</span>
+                    <span class="file-name" title="${file.name}">${file.name}</span>
+                    <span class="file-meta"><i class="fas fa-hdd"></i> ${formatSize(file.size)}</span>
                     <span class="file-meta"><i class="fas fa-tag"></i> ${typeLabel}</span>
-                    <span class="file-meta" style="background:#ddeeff;"><i class="fab fa-github"></i> + <i class="fas fa-fire"></i></span>
+                    <span class="file-meta"><i class="far fa-calendar"></i> ${uploadDate}</span>
                 </div>
                 <div class="file-actions">
-                    <button class="download-btn" data-url="${file.downloadURL}" data-name="${file.fileName}" title="Unduh">
+                    <button class="download-btn" data-id="${file.id}" title="Unduh">
                         <i class="fas fa-download"></i>
                     </button>
-                    <button class="delete-btn" data-id="${file.id}" data-path="${file.storagePath}" title="Hapus">
+                    <button class="delete-btn" data-id="${file.id}" title="Hapus">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -598,152 +569,129 @@
             fileGrid.appendChild(item);
         });
 
+        // Attach download events
         document.querySelectorAll('.download-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const url = btn.dataset.url;
-                const name = btn.dataset.name;
-                if (url) {
-                    window.open(url, '_blank');
-                    showToast(`Mengunduh ${name}`);
+                const id = btn.dataset.id;
+                const files = getFiles();
+                const found = files.find(f => f.id === id);
+                if (found) {
+                    downloadFile(found);
                 } else {
-                    showToast('URL download tidak tersedia', true);
+                    showToast('File tidak ditemukan', true);
                 }
             });
         });
 
+        // Attach delete events
         document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+            btn.addEventListener('click', (e) => {
                 const id = btn.dataset.id;
-                const path = btn.dataset.path;
-                if (confirm('Hapus file ini?')) {
-                    await deleteFile(id, path);
-                }
+                let files = getFiles();
+                files = files.filter(f => f.id !== id);
+                saveFiles(files);
+                showToast('File dihapus');
             });
         });
     }
 
-    // ========== DELETE FILE ==========
-    async function deleteFile(id, storagePath) {
+    // ========== DOWNLOAD ==========
+    function downloadFile(file) {
         try {
-            debugLog(`Deleting file: ${id}`);
-            if (storagePath) {
-                const fileRef = storage.ref(storagePath);
-                await fileRef.delete();
-                debugLog('File deleted from Storage');
+            const byteCharacters = atob(file.content);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
-            
-            await db.collection('files').doc(id).delete();
-            debugLog('File deleted from Firestore');
-            
-            showToast('File berhasil dihapus');
-            loadFiles();
-        } catch (error) {
-            debugLog('❌ Error deleting file: ' + error.message);
-            showToast('Gagal menghapus file: ' + error.message, true);
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: file.type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Mengunduh ${file.name}`);
+        } catch (err) {
+            showToast('Gagal mengunduh file', true);
         }
     }
 
-    // ========== UPLOAD FILE ==========
-    async function uploadFiles(fileList) {
+    // ========== UPLOAD ==========
+    function uploadFiles(fileList) {
         const filesArray = Array.from(fileList);
-        debugLog(`Processing ${filesArray.length} files`);
         
         const validFiles = filesArray.filter(file => {
             const ext = file.name.split('.').pop().toLowerCase();
             const validExt = ['xlsx', 'xls', 'pdf'].includes(ext);
             if (!validExt) {
                 showToast(`"${file.name}" bukan Excel atau PDF`, true);
-                debugLog(`❌ Invalid file type: ${file.name} (${ext})`);
                 return false;
             }
-            if (file.size > 20 * 1024 * 1024) {
+            if (file.size > MAX_SIZE) {
                 showToast(`"${file.name}" melebihi 20MB`, true);
-                debugLog(`❌ File too large: ${file.name} (${file.size} bytes)`);
                 return false;
             }
-            debugLog(`✅ Valid file: ${file.name} (${formatSize(file.size)})`);
             return true;
         });
 
-        if (validFiles.length === 0) {
-            debugLog('No valid files to upload');
-            return;
-        }
+        if (validFiles.length === 0) return;
 
         uploadBtn.innerHTML = '<span class="loading-spinner"></span> Mengunggah...';
         uploadBtn.disabled = true;
 
+        const existingFiles = getFiles();
         let successCount = 0;
-        let failCount = 0;
 
-        try {
-            for (const file of validFiles) {
-                try {
-                    debugLog(`Uploading: ${file.name}`);
-                    const timestamp = Date.now();
-                    const storagePath = `files/${timestamp}_${file.name}`;
-                    const storageRef = storage.ref(storagePath);
-                    
-                    debugLog('Uploading to Storage...');
-                    const snapshot = await storageRef.put(file);
-                    debugLog('✅ Upload to Storage successful');
-                    
-                    debugLog('Getting download URL...');
-                    const downloadURL = await snapshot.ref.getDownloadURL();
-                    debugLog(`✅ Download URL: ${downloadURL}`);
-                    
-                    debugLog('Saving to Firestore...');
-                    await db.collection('files').add({
-                        fileName: file.name,
-                        fileSize: file.size,
-                        fileType: file.type,
-                        storagePath: storagePath,
-                        downloadURL: downloadURL,
-                        uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        source: 'github+firebase'
-                    });
-                    debugLog('✅ Firestore save successful');
-                    
-                    successCount++;
-                    showToast(`"${file.name}" berhasil diunggah`);
-                } catch (fileError) {
-                    debugLog(`❌ Error uploading ${file.name}: ${fileError.message}`);
-                    failCount++;
-                    showToast(`Gagal mengunggah "${file.name}"`, true);
+        validFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target.result.split(',')[1];
+                const newFile = {
+                    id: generateId(),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    content: content,
+                    uploadedAt: Date.now()
+                };
+                existingFiles.push(newFile);
+                
+                successCount++;
+                if (successCount === validFiles.length) {
+                    saveFiles(existingFiles);
+                    showToast(`${successCount} file berhasil diunggah`);
+                    uploadBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Pilih file';
+                    uploadBtn.disabled = false;
+                    fileInput.value = '';
                 }
-            }
-            
-            if (successCount > 0) {
-                debugLog(`Upload complete: ${successCount} success, ${failCount} failed`);
-                loadFiles();
-            }
-            
-            if (failCount > 0 && successCount === 0) {
-                showToast('Gagal mengunggah semua file', true);
-            }
-        } catch (error) {
-            debugLog('❌ Upload error: ' + error.message);
-            showToast('Gagal mengunggah file: ' + error.message, true);
-        } finally {
-            uploadBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Pilih file';
-            uploadBtn.disabled = false;
-            fileInput.value = '';
-        }
+            };
+            reader.onerror = () => {
+                showToast(`Gagal membaca ${file.name}`, true);
+                uploadBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Pilih file';
+                uploadBtn.disabled = false;
+                fileInput.value = '';
+            };
+            reader.readAsDataURL(file);
+        });
     }
 
     // ========== EVENT LISTENERS ==========
     fileInput.addEventListener('change', (e) => {
         if (fileInput.files.length) {
-            debugLog(`File input changed: ${fileInput.files.length} files selected`);
             uploadFiles(fileInput.files);
         }
     });
 
     uploadBtn.addEventListener('click', () => {
-        debugLog('Upload button clicked');
         fileInput.click();
     });
 
+    clearAllBtn.addEventListener('click', clearAllFiles);
+
+    // Drag and drop
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('dragover');
@@ -758,15 +706,13 @@
         e.preventDefault();
         dropZone.classList.remove('dragover');
         if (e.dataTransfer.files.length) {
-            debugLog(`Drop event: ${e.dataTransfer.files.length} files dropped`);
             uploadFiles(e.dataTransfer.files);
         }
     });
 
     // ========== INIT ==========
-    loadFiles();
-    showToast('Vault siap · GitHub + Firebase terintegrasi', false);
-    debugLog('Application initialized');
+    renderFileList();
+    showToast('Vault siap pakai!', false);
 </script>
 </body>
 </html>
