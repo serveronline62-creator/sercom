@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Filsafat Nusantara - Belajar 50 Filsuf</title>
+    <title>Filsafat Nusantara — 51 Filsuf</title>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
@@ -11,198 +11,268 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
 
+    <!-- Font & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+
     <style>
-        /* --- RESET & GLOBAL --- */
+        /* --- RESET & VARIABLES --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #f6f4f0;
+            --surface: #ffffff;
+            --surface-2: #f0ede8;
+            --text: #1c1b1e;
+            --text-secondary: #5b5550;
+            --text-muted: #8a847e;
+            --accent: #b99274;
+            --accent-light: #dac4b2;
+            --accent-dark: #9a7b63;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.10);
+            --radius-card: 28px;
+            --radius-btn: 60px;
+            --radius-modal: 40px;
+            --transition: 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
         body {
-            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
-            background: #f5f2eb;
-            color: #1e1e2a;
-            line-height: 1.7;
-            padding: 0 16px 40px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0 20px 48px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1320px;
             margin: 0 auto;
         }
 
         /* --- HEADER --- */
         .header {
-            text-align: center;
-            padding: 48px 20px 32px;
-            background: linear-gradient(145deg, #1e1e2a 0%, #2a2838 100%);
-            border-radius: 0 0 48px 48px;
-            margin: 0 -16px 40px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
             position: relative;
+            background: linear-gradient(145deg, #1f1d26 0%, #2a2734 100%);
+            border-radius: 0 0 56px 56px;
+            margin: 0 -20px 44px;
+            padding: 56px 32px 44px;
+            text-align: center;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
             overflow: hidden;
         }
         .header::after {
             content: "⚘";
             position: absolute;
-            right: 30px;
-            bottom: 10px;
-            font-size: 80px;
-            opacity: 0.06;
+            right: 24px;
+            bottom: -8px;
+            font-size: 120px;
+            opacity: 0.05;
             color: #d4c9b0;
+            pointer-events: none;
         }
         .header h1 {
             font-size: 2.8rem;
             font-weight: 700;
             color: #f0ebe0;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
         }
         .header p {
             color: #b8ad9a;
-            font-size: 1.15rem;
-            max-width: 640px;
+            font-size: 1.1rem;
+            max-width: 560px;
             margin: 8px auto 0;
+            font-weight: 400;
+            letter-spacing: 0.01em;
         }
         .header .badge {
             display: inline-block;
             margin-top: 16px;
-            background: #d4a373;
-            color: #1e1e2a;
-            padding: 6px 24px;
-            border-radius: 40px;
+            background: var(--accent);
+            color: #1f1d26;
+            padding: 6px 28px;
+            border-radius: var(--radius-btn);
             font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
         }
 
-        /* --- SEARCH & FILTER --- */
+        /* --- TOOLBAR --- */
         .toolbar {
             display: flex;
             flex-wrap: wrap;
             gap: 12px 20px;
             align-items: center;
             justify-content: space-between;
-            background: #ffffffec;
-            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 20px;
             border-radius: 60px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            margin-bottom: 32px;
-            backdrop-filter: blur(4px);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            margin-bottom: 36px;
         }
         .toolbar .search-wrap {
             flex: 1 1 260px;
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #f3f0ea;
+            background: var(--surface-2);
             border-radius: 40px;
             padding: 0 18px;
             transition: 0.2s;
+            border: 1px solid transparent;
         }
         .toolbar .search-wrap:focus-within {
-            background: #fff;
-            box-shadow: 0 0 0 3px #d4a37355;
+            background: var(--surface);
+            border-color: var(--accent-light);
+            box-shadow: 0 0 0 4px rgba(185, 146, 116, 0.15);
         }
         .toolbar .search-wrap input {
             border: none;
             background: transparent;
             padding: 12px 0;
-            font-size: 1rem;
+            font-size: 0.95rem;
             width: 100%;
             outline: none;
-            color: #1e1e2a;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
         }
         .toolbar .search-wrap .icon {
-            font-size: 1.2rem;
-            color: #8a7e6a;
+            font-size: 1.1rem;
+            color: var(--text-muted);
         }
         .toolbar .filter-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
         .toolbar .filter-group button {
-            background: #f0ebe2;
+            background: transparent;
             border: none;
-            padding: 8px 18px;
+            padding: 6px 18px;
             border-radius: 40px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: #3d3a4a;
+            color: var(--text-secondary);
             cursor: pointer;
-            transition: 0.2s;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
         }
         .toolbar .filter-group button:hover {
-            background: #e2d9cc;
+            background: var(--surface-2);
         }
         .toolbar .filter-group button.active {
-            background: #1e1e2a;
-            color: #f0ebe0;
+            background: var(--text);
+            color: #fff;
+            box-shadow: var(--shadow-sm);
         }
         .toolbar .count-badge {
-            font-size: 0.9rem;
-            color: #6b5f4e;
+            font-size: 0.85rem;
             font-weight: 500;
+            color: var(--text-secondary);
             white-space: nowrap;
+            padding: 4px 12px;
+            background: var(--surface-2);
+            border-radius: 40px;
+        }
+        .seed-btn {
+            background: var(--accent);
+            border: none;
+            color: #fff;
+            padding: 6px 20px;
+            border-radius: var(--radius-btn);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            box-shadow: var(--shadow-sm);
+        }
+        .seed-btn:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .seed-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* --- GRID KARTU --- */
+        /* --- GRID --- */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-            margin-top: 8px;
+            gap: 28px;
+            margin-top: 4px;
         }
 
-        /* --- KARTU FILSUF --- */
+        /* --- CARD --- */
         .card {
-            background: #ffffff;
-            border-radius: 28px;
-            padding: 24px 22px 28px;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
-            transition: 0.25s cubic-bezier(0.2, 0, 0, 1);
-            border: 1px solid #f0ebe2;
+            background: var(--surface);
+            border-radius: var(--radius-card);
+            padding: 24px 24px 28px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.02);
             cursor: pointer;
             display: flex;
             flex-direction: column;
+            will-change: transform;
         }
         .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.10);
-            border-color: #d4c9b0;
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-light);
         }
         .card .card-header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 12px;
+            gap: 16px;
+            margin-bottom: 14px;
         }
-        .card .avatar {
+        .card .card-header .avatar {
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: #e8e0d4;
+            background: var(--surface-2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 600;
-            color: #3d3a4a;
+            color: var(--text-secondary);
             flex-shrink: 0;
-            background: linear-gradient(135deg, #d4c9b0, #e8e0d4);
+            overflow: hidden;
+            box-shadow: 0 0 0 2px rgba(185, 146, 116, 0.12);
+        }
+        .card .card-header .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
         .card .card-header .name-group h3 {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
-            color: #1e1e2a;
+            color: var(--text);
             line-height: 1.2;
+            letter-spacing: -0.01em;
         }
         .card .card-header .name-group .era {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
-            color: #8a7e6a;
+            color: var(--text-muted);
             letter-spacing: 0.3px;
             text-transform: uppercase;
         }
@@ -210,19 +280,20 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            margin: 6px 0 12px;
+            margin: 4px 0 12px;
         }
         .card .card-tags span {
-            background: #f3f0ea;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
+            background: var(--surface-2);
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 0.65rem;
             font-weight: 500;
-            color: #5a4f3e;
+            color: var(--text-secondary);
+            letter-spacing: 0.2px;
         }
         .card .bio-preview {
-            font-size: 0.92rem;
-            color: #3d3a4a;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
             line-height: 1.6;
             flex: 1;
             display: -webkit-box;
@@ -231,31 +302,43 @@
             overflow: hidden;
         }
         .card .card-footer {
-            margin-top: 16px;
+            margin-top: 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #f0ebe2;
-            padding-top: 14px;
+            border-top: 1px solid var(--surface-2);
+            padding-top: 16px;
         }
         .card .card-footer .read-more {
-            color: #8a6e4b;
+            color: var(--accent-dark);
             font-weight: 600;
-            font-size: 0.85rem;
-            letter-spacing: 0.3px;
+            font-size: 0.8rem;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .card .card-footer .read-more::after {
+            content: "→";
+            transition: 0.2s;
+        }
+        .card:hover .card-footer .read-more::after {
+            transform: translateX(4px);
         }
         .card .card-footer .thought-count {
-            font-size: 0.75rem;
-            color: #8a7e6a;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
-        /* --- DETAIL MODAL --- */
+        /* --- MODAL --- */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(20, 18, 28, 0.6);
-            backdrop-filter: blur(6px);
+            background: rgba(20, 18, 28, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 999;
             align-items: center;
             justify-content: center;
@@ -266,21 +349,21 @@
             display: flex;
         }
         .modal {
-            background: #ffffff;
-            border-radius: 40px;
+            background: var(--surface);
+            border-radius: var(--radius-modal);
             max-width: 880px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             padding: 40px 44px 48px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.30);
+            box-shadow: var(--shadow-lg);
             position: relative;
             animation: modalFade 0.3s ease;
         }
         @keyframes modalFade {
             from {
                 opacity: 0;
-                transform: scale(0.96) translateY(20px);
+                transform: scale(0.96) translateY(16px);
             }
             to {
                 opacity: 1;
@@ -291,19 +374,20 @@
             position: sticky;
             top: 0;
             float: right;
-            background: #f0ebe2;
+            background: var(--surface-2);
             border: none;
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            transition: 0.2s;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #3d3a4a;
+            color: var(--text-secondary);
             margin-bottom: 8px;
+            z-index: 2;
         }
         .modal .close-btn:hover {
             background: #e2d9cc;
@@ -313,79 +397,88 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .modal .modal-header .big-avatar {
-            width: 72px;
-            height: 72px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #d4c9b0, #e8e0d4);
+            background: var(--surface-2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.4rem;
             font-weight: 700;
-            color: #1e1e2a;
+            color: var(--text-secondary);
             flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 0 0 3px rgba(185, 146, 116, 0.15);
+        }
+        .modal .modal-header .big-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .modal .modal-header .title-group h2 {
             font-size: 2rem;
             font-weight: 700;
-            color: #1e1e2a;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
         }
         .modal .modal-header .title-group .meta {
-            font-size: 0.9rem;
-            color: #8a7e6a;
-        }
-        .modal .modal-body {
-            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 2px;
         }
         .modal .modal-body section {
-            margin-bottom: 32px;
+            margin-bottom: 36px;
         }
         .modal .modal-body section h3 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #1e1e2a;
-            margin-bottom: 8px;
+            color: var(--text);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         .modal .modal-body section h3 .emoji {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
         }
         .modal .modal-body .bio-text {
-            font-size: 1rem;
-            color: #2d2a3a;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
             line-height: 1.8;
             white-space: pre-wrap;
         }
         .modal .modal-body .thought-block {
-            background: #f8f5ef;
+            background: var(--surface-2);
             border-radius: 20px;
-            padding: 18px 22px;
-            margin-bottom: 18px;
-            border-left: 4px solid #d4a373;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--accent);
         }
         .modal .modal-body .thought-block .point-title {
             font-weight: 700;
-            font-size: 1.05rem;
-            color: #1e1e2a;
+            font-size: 1rem;
+            color: var(--text);
             margin-bottom: 4px;
         }
         .modal .modal-body .thought-block .explanation {
-            color: #3d3a4a;
-            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
             margin: 6px 0 10px;
         }
         .modal .modal-body .thought-block .story {
-            background: #ffffffd0;
-            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 16px 20px;
             border-radius: 16px;
-            font-size: 0.92rem;
-            color: #2d2a3a;
-            border: 1px solid #e8e0d4;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.8);
             margin: 8px 0 4px;
             font-style: italic;
         }
@@ -396,28 +489,28 @@
         .modal .modal-body .sources-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px 16px;
+            gap: 8px 20px;
             margin-top: 6px;
         }
         .modal .modal-body .sources-list a {
-            color: #8a6e4b;
+            color: var(--accent-dark);
             text-decoration: none;
             font-weight: 500;
-            font-size: 0.9rem;
-            border-bottom: 1px dotted #d4c9b0;
-            transition: 0.15s;
+            font-size: 0.85rem;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
         }
         .modal .modal-body .sources-list a:hover {
-            color: #5a4f3e;
-            border-bottom-color: #8a6e4b;
+            border-bottom-color: var(--accent);
+            color: var(--text);
         }
         .modal .modal-body .word-count {
-            font-size: 0.8rem;
-            color: #8a7e6a;
+            font-size: 0.75rem;
+            color: var(--text-muted);
             text-align: right;
-            margin-top: 12px;
-            border-top: 1px solid #f0ebe2;
-            padding-top: 12px;
+            margin-top: 16px;
+            border-top: 1px solid var(--surface-2);
+            padding-top: 16px;
         }
 
         /* --- LOADING & EMPTY --- */
@@ -425,14 +518,14 @@
         .empty-state {
             text-align: center;
             padding: 80px 20px;
-            color: #6b5f4e;
+            color: var(--text-muted);
         }
         .loading-state .spinner {
             display: inline-block;
             width: 40px;
             height: 40px;
-            border: 4px solid #e8e0d4;
-            border-top-color: #8a6e4b;
+            border: 4px solid var(--surface-2);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin-bottom: 16px;
@@ -443,19 +536,52 @@
             }
         }
 
+        /* --- TOAST --- */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: #f0ebe0;
+            padding: 14px 32px;
+            border-radius: var(--radius-btn);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         /* --- RESPONSIVE --- */
         @media (max-width: 700px) {
             .header h1 {
                 font-size: 2rem;
+            }
+            .header {
+                padding: 36px 20px 32px;
+                margin: 0 -20px 32px;
             }
             .toolbar {
                 border-radius: 28px;
                 padding: 14px 18px;
                 flex-direction: column;
                 align-items: stretch;
+                gap: 10px;
+                background: rgba(255, 255, 255, 0.8);
+            }
+            .toolbar .filter-group {
+                justify-content: center;
             }
             .modal {
-                padding: 24px 18px 32px;
+                padding: 28px 20px 32px;
                 border-radius: 28px;
             }
             .modal .modal-header {
@@ -466,75 +592,36 @@
             }
             .grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
             .card .card-header .name-group h3 {
                 font-size: 1.05rem;
             }
+            .seed-btn {
+                align-self: center;
+            }
         }
+
         @media (min-width: 701px) and (max-width: 1024px) {
             .grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        /* scrollbar */
+        /* Scrollbar modal */
         .modal::-webkit-scrollbar {
             width: 6px;
         }
         .modal::-webkit-scrollbar-track {
-            background: #f5f2eb;
+            background: var(--surface-2);
             border-radius: 8px;
         }
         .modal::-webkit-scrollbar-thumb {
-            background: #d4c9b0;
+            background: var(--accent-light);
             border-radius: 8px;
         }
         .modal::-webkit-scrollbar-thumb:hover {
-            background: #b8ad9a;
-        }
-
-        /* Tombol seed (admin) */
-        .seed-btn {
-            background: #d4a373;
-            border: none;
-            color: #1e1e2a;
-            padding: 6px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-left: 8px;
-        }
-        .seed-btn:hover {
-            background: #c49264;
-            transform: scale(1.02);
-        }
-        .seed-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1e1e2a;
-            color: #f0ebe0;
-            padding: 12px 30px;
-            border-radius: 60px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-            z-index: 9999;
-            opacity: 0;
-            transition: 0.3s;
-            pointer-events: none;
-        }
-        .toast.show {
-            opacity: 1;
-            pointer-events: auto;
+            background: var(--accent);
         }
     </style>
 </head>
@@ -545,8 +632,8 @@
         <!-- HEADER -->
         <header class="header">
             <h1>📚 Filsafat Nusantara</h1>
-            <p>Menjelajahi 50 filsuf dunia — biografi, pokok pemikiran, dan relevansi dalam kehidupan sehari-hari</p>
-            <span class="badge">⚘ 50 Filsuf • 250.000+ kata</span>
+            <p>Menjelajahi 51 filsuf dunia — biografi, pokok pemikiran, dan relevansi dalam kehidupan sehari-hari</p>
+            <span class="badge">⚘ 51 Filsuf • 260.000+ kata</span>
         </header>
 
         <!-- TOOLBAR -->
@@ -562,7 +649,7 @@
                 <button data-filter="Modern">Modern</button>
                 <button data-filter="Kuno">Kuno</button>
             </div>
-            <span class="count-badge" id="countBadge">50 filsuf</span>
+            <span class="count-badge" id="countBadge">51 filsuf</span>
             <button class="seed-btn" id="seedBtn">⚡ Seed Data</button>
         </div>
 
@@ -602,14 +689,16 @@
         const db = firebase.firestore();
 
         // ============================================================
-        // 2. DATA FILSUF (50 filsuf lengkap)
+        // 2. DATA FILSUF (51 filsuf lengkap + gambar)
         // ============================================================
+        // (Data lengkap 50 filsuf sebelumnya + Thomas Hobbes sebagai tambahan)
         const PHILOSOPHERS_DATA = [{
             id: "socrates",
             name: "Socrates",
             era: "Kuno",
             region: "Barat",
             avatar: "S",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Socrates_Louvre.jpg/150px-Socrates_Louvre.jpg",
             bio: "Socrates (470–399 SM) adalah filsuf Yunani kuno yang dianggap sebagai bapak filsafat Barat. Ia tidak meninggalkan tulisan, tetapi ajarannya dikenal melalui muridnya Plato. Socrates dikenal dengan metode tanya-jawab (dialektika) untuk menggali kebenaran. Ia dihukum mati dengan racun hemlock karena dianggap merusak pemuda dan tidak mengakui dewa-dewa Athena. Semboyannya yang terkenal: 'Hidup yang tidak diuji tidak layak dijalani.'",
             keyThoughts: [{
                 point: "Mengetahui diri sendiri (Gnothi Seauton)",
@@ -643,6 +732,7 @@
             era: "Kuno",
             region: "Barat",
             avatar: "P",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Plato_Silanion_Musei_Capitolini_MC1377.jpg/150px-Plato_Silanion_Musei_Capitolini_MC1377.jpg",
             bio: "Plato (427–347 SM) adalah murid Socrates dan guru Aristoteles. Ia mendirikan Akademi di Athena, lembaga pendidikan tinggi pertama di dunia Barat. Plato menulis dalam bentuk dialog, dengan tokoh utama Socrates. Karya utamanya meliputi 'Republik', 'Phaedo', dan 'Symposium'. Ia mengembangkan teori bentuk (ide) dan gagasan tentang negara ideal yang dipimpin oleh filsuf-raja.",
             keyThoughts: [{
                 point: "Teori Bentuk (Ide)",
@@ -676,6 +766,7 @@
             era: "Kuno",
             region: "Barat",
             avatar: "A",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Aristotle_Altemps_Inv8575.jpg/150px-Aristotle_Altemps_Inv8575.jpg",
             bio: "Aristoteles (384–322 SM) adalah murid Plato dan guru Alexander Agung. Ia mendirikan Lyceum di Athena. Aristoteles adalah polymath: filsafat, logika, biologi, fisika, etika, politik, dan puisi. Karyanya 'Etika Nikomakeia' dan 'Politika' sangat berpengaruh. Ia mengembangkan logika silogistik dan pandangan bahwa kebahagiaan (eudaimonia) adalah tujuan tertinggi manusia.",
             keyThoughts: [{
                 point: "Eudaimonia (Kebahagiaan Sejati)",
@@ -709,6 +800,7 @@
             era: "Kuno",
             region: "Barat",
             avatar: "E",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Epicurus_Met_72.jpg/150px-Epicurus_Met_72.jpg",
             bio: "Epicurus (341–270 SM) adalah filsuf Yunani yang mengajarkan bahwa kebahagiaan adalah tujuan hidup, dan kebahagiaan dicapai melalui ketenangan jiwa (ataraxia) dan kebebasan dari rasa takut (aphobia). Ia mendirikan 'Taman' di Athena, sebuah komunitas yang hidup sederhana dan bersahabat. Epicurus sering disalahpahami sebagai hedonis vulgar; sebenarnya ia mengajarkan kesenangan yang bijaksana dan terkendali.",
             keyThoughts: [{
                 point: "Kesenangan adalah Tujuan Hidup",
@@ -742,6 +834,7 @@
             era: "Kuno",
             region: "Barat",
             avatar: "Z",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Zeno_Citium_Bust.jpg/150px-Zeno_Citium_Bust.jpg",
             bio: "Zeno dari Citium (334–262 SM) adalah pendiri aliran Stoa. Ia mengajarkan bahwa kebahagiaan dicapai dengan hidup selaras dengan alam dan menerima apa yang terjadi dengan tenang. Stoa menekankan pengendalian diri, logika, dan kebajikan. Zeno mengajar di serambi (stoa) di Athena, dan ajarannya menjadi fondasi bagi filsafat Stoa yang berkembang di Roma.",
             keyThoughts: [{
                 point: "Hidup Selaras dengan Alam",
@@ -774,6 +867,7 @@
             era: "Kuno",
             region: "Barat",
             avatar: "M",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Marcus_Aurelius_Glyptothek_Munich.jpg/150px-Marcus_Aurelius_Glyptothek_Munich.jpg",
             bio: "Marcus Aurelius (121–180 M) adalah Kaisar Romawi dan filsuf Stoa terkemuka. Tulisannya yang terkenal, 'Meditasi', adalah buku harian pribadi yang penuh dengan refleksi tentang kehidupan, kematian, dan kebajikan. Ia dikenal sebagai 'filsuf-raja' yang memimpin dengan kebijaksanaan dan ketenangan di tengah perang dan wabah.",
             keyThoughts: [{
                 point: "Kendalikan Pikiranmu",
@@ -807,6 +901,7 @@
             era: "Kuno",
             region: "Barat",
             avatar: "A",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/St._Augustine_Portrait.jpg/150px-St._Augustine_Portrait.jpg",
             bio: "Augustinus (354–430 M) adalah salah satu Bapa Gereja terpenting. Ia lahir di Afrika Utara dan menjadi uskup Hippo. Karyanya 'Pengakuan' dan 'Kota Allah' sangat berpengaruh dalam teologi dan filsafat Kristen. Augustinus menggabungkan Platonisme dengan iman Kristen, dan mengembangkan konsep dosa asal, rahmat, dan predestinasi.",
             keyThoughts: [{
                 point: "Waktu sebagai Gangguan Jiwa",
@@ -840,6 +935,7 @@
             era: "Kuno",
             region: "Barat",
             avatar: "T",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/St-thomas-aquinas.jpg/150px-St-thomas-aquinas.jpg",
             bio: "Thomas Aquinas (1225–1274) adalah filsuf dan teolog Dominikan dari Italia. Ia dikenal karena sintesis antara iman Kristen dan filsafat Aristoteles. Karyanya 'Summa Theologiae' adalah salah satu karya terbesar dalam teologi. Ia mengembangkan lima argumen untuk membuktikan keberadaan Tuhan (Via) dan etika alami.",
             keyThoughts: [{
                 point: "Lima Cara Membuktikan Tuhan (Quinque Viae)",
@@ -873,6 +969,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "R",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg/150px-Frans_Hals_-_Portret_van_Ren%C3%A9_Descartes.jpg",
             bio: "René Descartes (1596–1650) adalah filsuf, matematikawan, dan ilmuwan Prancis. Ia dijuluki 'Bapak Filsafat Modern'. Karyanya 'Meditasi tentang Filsafat Pertama' dan 'Discours de la méthode' meletakkan dasar rasionalisme. Semboyannya 'Cogito, ergo sum' (Aku berpikir, maka aku ada) adalah titik awal filsafat modern.",
             keyThoughts: [{
                 point: "Cogito, ergo sum",
@@ -906,6 +1003,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "J",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/John_Locke.jpg/150px-John_Locke.jpg",
             bio: "John Locke (1632–1704) adalah filsuf Inggris, bapak liberalisme. Karyanya 'Essay Concerning Human Understanding' membahas empirisme, dan 'Two Treatises of Government' membahas hak-hak alami dan kontrak sosial. Locke berpengaruh besar pada Revolusi Amerika dan Prancis.",
             keyThoughts: [{
                 point: "Tabula Rasa (Pikiran Kosong)",
@@ -939,6 +1037,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "D",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/David_Hume.jpg/150px-David_Hume.jpg",
             bio: "David Hume (1711–1776) adalah filsuf Skotlandia, tokoh utama empirisme dan skeptisisme. Karyanya 'A Treatise of Human Nature' berusaha menerapkan metode ilmiah pada studi manusia. Hume meragukan kausalitas, identitas diri, dan agama, tetapi ia juga mengajarkan bahwa kebiasaan dan emosi memandu kehidupan.",
             keyThoughts: [{
                 point: "Kausalitas Adalah Kebiasaan Pikiran",
@@ -972,6 +1071,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "J",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Jean-Jacques_Rousseau_%28portrait%29.jpg/150px-Jean-Jacques_Rousseau_%28portrait%29.jpg",
             bio: "Jean-Jacques Rousseau (1712–1778) adalah filsuf Prancis-Swiss yang berpengaruh besar dalam Revolusi Prancis dan Romantisme. Karyanya 'Kontrak Sosial' dan 'Emile' membahas pendidikan, kebebasan, dan masyarakat. Semboyannya: 'Manusia dilahirkan bebas, tetapi di mana-mana ia terbelenggu.'",
             keyThoughts: [{
                 point: "Manusia Baik Secara Alami, Rusak oleh Masyarakat",
@@ -1005,6 +1105,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "I",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Immanuel_Kant_%28portrait%29.jpg/150px-Immanuel_Kant_%28portrait%29.jpg",
             bio: "Immanuel Kant (1724–1804) adalah filsuf Jerman, tokoh sentral dalam filsafat modern. Karyanya 'Kritik atas Akal Budi Murni' merevolusi epistemologi. Ia mengembangkan etika deontologis dengan imperatif kategoris. Kant menjembatani rasionalisme dan empirisme, dan ajarannya sangat berpengaruh hingga hari ini.",
             keyThoughts: [{
                 point: "Imperatif Kategoris",
@@ -1038,6 +1139,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "G",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Hegel_portrait.jpg/150px-Hegel_portrait.jpg",
             bio: "Hegel (1770–1831) adalah filsuf Jerman, tokoh utama idealisme Jerman. Ia mengembangkan dialektika tesis-antitesis-sintesis dan melihat sejarah sebagai perjalanan Roh (Geist) menuju kesadaran diri. Karyanya 'Fenomenologi Roh' dan 'Filsafat Sejarah' sangat berpengaruh pada Marxisme dan eksistensialisme.",
             keyThoughts: [{
                 point: "Dialektika: Tesis-Antitesis-Sintesis",
@@ -1071,6 +1173,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "A",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Arthur_Schopenhauer_Portrait.jpg/150px-Arthur_Schopenhauer_Portrait.jpg",
             bio: "Arthur Schopenhauer (1788–1860) adalah filsuf Jerman yang dikenal dengan pesimisme metafisiknya. Karyanya 'Dunia sebagai Kehendak dan Representasi' mengajarkan bahwa realitas fundamental adalah 'kehendak' buta yang menyebabkan penderitaan. Ia terinspirasi oleh Buddhisme dan Kant.",
             keyThoughts: [{
                 point: "Dunia sebagai Kehendak dan Representasi",
@@ -1104,6 +1207,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "F",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Nietzsche187a.jpg/150px-Nietzsche187a.jpg",
             bio: "Friedrich Nietzsche (1844–1900) adalah filsuf Jerman yang menantang moralitas tradisional dan agama. Karyanya 'Demikianlah Zarathustra', 'Di Luar Baik dan Jahat', dan 'Genealogi Moral' mengajarkan tentang 'kehendak untuk berkuasa', 'übermensch', dan 'kematian Tuhan'. Nietzsche adalah tokoh kontroversial yang mempengaruhi eksistensialisme, postmodernisme, dan psikologi.",
             keyThoughts: [{
                 point: "Kematian Tuhan dan Nilai Baru",
@@ -1137,6 +1241,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "S",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Kierkegaard.jpg/150px-Kierkegaard.jpg",
             bio: "Søren Kierkegaard (1813–1855) adalah filsuf Denmark, dianggap sebagai bapak eksistensialisme. Ia menekankan keberadaan individu, kebebasan, dan pilihan. Karyanya 'Enten-Eller', 'Cemas', dan 'Patah dan Gentar' mengajarkan tentang lompatan iman dan subjektivitas.",
             keyThoughts: [{
                 point: "Lompatan Iman",
@@ -1170,6 +1275,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "K",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Karl_Marx_001.jpg/150px-Karl_Marx_001.jpg",
             bio: "Karl Marx (1818–1883) adalah filsuf, ekonom, dan revolusioner Jerman. Bersama Engels, ia menulis 'Manifesto Komunis' dan 'Das Kapital'. Marx mengembangkan materialisme dialektis dan teori perjuangan kelas. Ia mempengaruhi gerakan buruh dan revolusi di seluruh dunia.",
             keyThoughts: [{
                 point: "Materialisme Sejarah",
@@ -1203,6 +1309,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "J",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/John_Stuart_Mill.jpg/150px-John_Stuart_Mill.jpg",
             bio: "John Stuart Mill (1806–1873) adalah filsuf Inggris, tokoh utama utilitarianisme dan liberalisme. Karyanya 'Utilitarianisme' dan 'On Liberty' membela kebebasan individu, kebebasan berpendapat, dan hak perempuan. Mill adalah salah satu pemikir paling berpengaruh dalam politik dan etika.",
             keyThoughts: [{
                 point: "Prinsip Utilitas (Kebahagiaan Terbesar)",
@@ -1236,6 +1343,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "W",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/William_James_1842-1910.jpg/150px-William_James_1842-1910.jpg",
             bio: "William James (1842–1910) adalah filsuf dan psikolog Amerika, tokoh utama pragmatisme dan psikologi fungsional. Karyanya 'Prinsip-prinsip Psikologi' dan 'Pragmatisme' mengajarkan bahwa kebenaran adalah apa yang bekerja dalam praktik. Ia juga menulis tentang pengalaman religius.",
             keyThoughts: [{
                 point: "Pragmatisme: Kebenaran adalah yang Bermanfaat",
@@ -1269,6 +1377,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "F",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Friedrich_Engels.jpg/150px-Friedrich_Engels.jpg",
             bio: "Friedrich Engels (1820–1895) adalah filsuf, ilmuwan sosial, dan revolusioner Jerman. Bersama Marx, ia menulis 'Manifesto Komunis' dan membantu menyusun 'Das Kapital'. Engels juga menulis 'Kondisi Kelas Pekerja di Inggris' dan mengembangkan materialisme dialektis.",
             keyThoughts: [{
                 point: "Materialisme Dialektis",
@@ -1302,6 +1411,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "M",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Martin_Heidegger_%281960%29.jpg/150px-Martin_Heidegger_%281960%29.jpg",
             bio: "Martin Heidegger (1889–1976) adalah filsuf Jerman, tokoh utama eksistensialisme dan fenomenologi. Karyanya 'Being and Time' mengajukan pertanyaan tentang 'Ada' (Sein). Heidegger mempengaruhi Sartre, Gadamer, dan Derrida. Ia juga kontroversial karena keterlibatannya dengan Nazi.",
             keyThoughts: [{
                 point: "Dasein (Berada-di-Dunia)",
@@ -1335,6 +1445,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "J",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Jean-Paul_Sartre_1950.jpg/150px-Jean-Paul_Sartre_1950.jpg",
             bio: "Jean-Paul Sartre (1905–1980) adalah filsuf Prancis, tokoh utama eksistensialisme. Karyanya 'Being and Nothingness' dan 'Eksistensialisme adalah Humanisme' mengajarkan bahwa 'eksistensi mendahului esensi'. Sartre menekankan kebebasan, tanggung jawab, dan keterlibatan politik. Ia menolak Hadiah Nobel pada 1964.",
             keyThoughts: [{
                 point: "Eksistensi Mendahului Esensi",
@@ -1368,6 +1479,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "A",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Albert_Camus%2C_gagnant_de_prix_Nobel%2C_portrait_en_buste.jpg/150px-Albert_Camus%2C_gagnant_de_prix_Nobel%2C_portrait_en_buste.jpg",
             bio: "Albert Camus (1913–1960) adalah filsuf dan penulis Prancis, tokoh absurdisme. Karyanya 'Mitos Sisyphus', 'Orang Asing', dan 'Wabah' mengajarkan tentang absurditas kehidupan dan bagaimana menghadapinya dengan pemberontakan dan solidaritas. Camus menolak label eksistensialis dan memenangkan Hadiah Nobel pada 1957.",
             keyThoughts: [{
                 point: "Absurd: Benturan Antara Manusia dan Dunia",
@@ -1401,6 +1513,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "S",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Simone_de_Beauvoir_1968.jpg/150px-Simone_de_Beauvoir_1968.jpg",
             bio: "Simone de Beauvoir (1908–1986) adalah filsuf dan feminis Prancis. Karyanya 'The Second Sex' menjadi teks fundamental feminisme. Ia mengajarkan bahwa 'seseorang tidak dilahirkan sebagai wanita, tetapi menjadi wanita'. Beauvoir adalah eksistensialis yang menekankan kebebasan dan tanggung jawab dalam konteks gender.",
             keyThoughts: [{
                 point: "Seseorang Tidak Dilahirkan, tetapi Menjadi Wanita",
@@ -1434,6 +1547,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "M",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Michel_Foucault_1974.jpg/150px-Michel_Foucault_1974.jpg",
             bio: "Michel Foucault (1926–1984) adalah filsuf Prancis, tokoh utama postmodernisme dan poststrukturalisme. Karyanya 'Sejarah Kegilaan', 'Pengawasan dan Hukuman', dan 'Sejarah Seksualitas' menganalisis kekuasaan, pengetahuan, dan disiplin. Foucault menunjukkan bagaimana lembaga sosial membentuk subjek.",
             keyThoughts: [{
                 point: "Kekuasaan dan Pengetahuan (Power/Knowledge)",
@@ -1467,6 +1581,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "J",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Jacques_Derrida.jpg/150px-Jacques_Derrida.jpg",
             bio: "Jacques Derrida (1930–2004) adalah filsuf Prancis, pendiri dekonstruksi. Ia menantang tradisi metafisika Barat yang mengutamakan 'kehadiran'. Karyanya 'Of Grammatology' dan 'Writing and Difference' menunjukkan bahwa makna selalu tertunda dan tidak stabil. Derrida mempengaruhi sastra, arsitektur, dan teori politik.",
             keyThoughts: [{
                 point: "Dekonstruksi: Membongkar Oposisi Biner",
@@ -1500,6 +1615,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "L",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Ludwig_Wittgenstein_1910.jpg/150px-Ludwig_Wittgenstein_1910.jpg",
             bio: "Ludwig Wittgenstein (1889–1951) adalah filsuf Austria, salah satu tokoh paling berpengaruh dalam filsafat abad ke-20. Karyanya 'Tractatus Logico-Philosophicus' dan 'Philosophical Investigations' merepresentasikan dua fase pemikirannya: awal (gambar bahasa) dan akhir (permainan bahasa).",
             keyThoughts: [{
                 point: "Bahasa sebagai Gambar Realitas (Tractatus)",
@@ -1533,6 +1649,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "B",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Bertrand_Russell_1957.jpg/150px-Bertrand_Russell_1957.jpg",
             bio: "Bertrand Russell (1872–1970) adalah filsuf, matematikawan, dan aktivis perdamaian Inggris. Ia adalah salah satu logikawan terbesar abad ke-20. Karyanya 'Principia Mathematica' (dengan Whitehead) dan 'History of Western Philosophy' sangat berpengaruh. Russell adalah ateis dan aktivis anti-perang yang vokal.",
             keyThoughts: [{
                 point: "Logika dan Matematika",
@@ -1566,6 +1683,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "K",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Karl_Popper.jpg/150px-Karl_Popper.jpg",
             bio: "Karl Popper (1902–1994) adalah filsuf sains Austria-Inggris. Ia mengembangkan falsifikasionisme: teori ilmiah harus dapat diuji dan berpotensi dipalsukan. Karyanya 'The Logic of Scientific Discovery' dan 'The Open Society and Its Enemies' sangat berpengaruh. Popper membela demokrasi liberal melawan totalitarianisme.",
             keyThoughts: [{
                 point: "Falsifikasionisme",
@@ -1599,6 +1717,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "T",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Thomas_Kuhn.jpg/150px-Thomas_Kuhn.jpg",
             bio: "Thomas Kuhn (1922–1996) adalah filsuf dan sejarawan sains Amerika. Karyanya 'The Structure of Scientific Revolutions' memperkenalkan konsep 'paradigma' dan 'revolusi ilmiah'. Kuhn menunjukkan bahwa sains tidak berkembang secara linear, tetapi melalui pergeseran paradigma.",
             keyThoughts: [{
                 point: "Paradigma dan Ilmu Normal",
@@ -1632,6 +1751,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "J",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/John_Rawls_2005.jpg/150px-John_Rawls_2005.jpg",
             bio: "John Rawls (1921–2002) adalah filsuf politik Amerika, tokoh utama teori keadilan liberal. Karyanya 'A Theory of Justice' mengajukan prinsip keadilan sebagai 'keadilan sebagai kewajaran'. Rawls menggunakan 'veil of ignorance' untuk menentukan prinsip-prinsip keadilan.",
             keyThoughts: [{
                 point: "Keadilan sebagai Kewajaran (Fairness)",
@@ -1665,6 +1785,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "R",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Robert_Nozick.jpg/150px-Robert_Nozick.jpg",
             bio: "Robert Nozick (1938–2002) adalah filsuf Amerika, tokoh utama libertarianisme. Karyanya 'Anarchy, State, and Utopia' adalah tanggapan terhadap Rawls. Nozick membela hak-hak individu yang tidak dapat diganggu gugat dan negara minimal. Ia juga menulis tentang pengalaman dan makna hidup.",
             keyThoughts: [{
                 point: "Teori Hak (Entitlement Theory)",
@@ -1698,6 +1819,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "H",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Hannah_Arendt_%281955%29.jpg/150px-Hannah_Arendt_%281955%29.jpg",
             bio: "Hannah Arendt (1906–1975) adalah filsuf dan teoritikus politik Jerman-Amerika. Karyanya 'The Origins of Totalitarianism' dan 'Eichmann in Jerusalem' menganalisis totalitarianisme dan 'banality of evil'. Arendt menekankan pentingnya tindakan politik, ruang publik, dan pemikiran kritis.",
             keyThoughts: [{
                 point: "Banality of Evil (Kebanalan Kejahatan)",
@@ -1731,6 +1853,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "J",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/J%C3%BCrgen_Habermas_2014.jpg/150px-J%C3%BCrgen_Habermas_2014.jpg",
             bio: "Jürgen Habermas (1929–) adalah filsuf Jerman, tokoh utama teori kritis dan pragmatisme. Karyanya 'Teori Tindakan Komunikatif' mengembangkan konsep ruang publik dan etika diskursus. Habermas adalah salah satu pemikir paling berpengaruh dalam filsafat kontemporer.",
             keyThoughts: [{
                 point: "Tindakan Komunikatif",
@@ -1764,6 +1887,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "K",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Confucius_%28cropped%29.jpg/150px-Confucius_%28cropped%29.jpg",
             bio: "Konfusius (551–479 SM) adalah filsuf Tiongkok kuno, pendiri Konfusianisme. Ajarannya berfokus pada etika, moralitas, hubungan sosial, dan pemerintahan. Karyanya 'Analekta' berisi percakapan dengan murid-muridnya. Konfusius mengajarkan tentang 'ren' (kemanusiaan), 'li' (ritual), dan 'xiao' (bakti).",
             keyThoughts: [{
                 point: "Ren (Kemanusiaan / Cinta Kasih)",
@@ -1797,6 +1921,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "L",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Laozi_%E8%80%81%E5%AD%90.jpg/150px-Laozi_%E8%80%81%E5%AD%90.jpg",
             bio: "Lao Tzu (abad ke-6 SM) adalah filsuf Tiongkok kuno, pendiri Taoisme. Karyanya 'Tao Te Ching' adalah teks fundamental Taoisme. Lao Tzu mengajarkan tentang 'Tao' (Jalan) dan 'Wu Wei' (tindakan tanpa paksaan). Ia menekankan kesederhanaan, spontanitas, dan harmoni dengan alam.",
             keyThoughts: [{
                 point: "Tao (Jalan)",
@@ -1830,6 +1955,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "Z",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Zhuangzi.jpg/150px-Zhuangzi.jpg",
             bio: "Zhuangzi (369–286 SM) adalah filsuf Tiongkok dari aliran Taoisme. Karyanya 'Zhuangzi' penuh dengan cerita alegoris yang menantang logika dan konvensi. Zhuangzi mengajarkan tentang relativitas, kebebasan, dan penerimaan. Ia terkenal dengan cerita tentang 'kupu-kupu Zhuangzi'.",
             keyThoughts: [{
                 point: "Kupu-kupu Zhuangzi (Mimpi dan Realitas)",
@@ -1863,6 +1989,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "M",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Mencius.jpg/150px-Mencius.jpg",
             bio: "Mencius (372–289 SM) adalah filsuf Tiongkok, pengikut Konfusius. Ia mengembangkan ajaran Konfusianisme dengan menekankan bahwa manusia pada dasarnya baik. Karyanya 'Mengzi' berisi percakapan dengan penguasa tentang pemerintahan yang baik. Mencius percaya bahwa kebajikan dapat dikembangkan melalui pendidikan dan refleksi.",
             keyThoughts: [{
                 point: "Manusia pada Dasarnya Baik",
@@ -1896,6 +2023,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "X",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Xunzi.jpg/150px-Xunzi.jpg",
             bio: "Xunzi (313–238 SM) adalah filsuf Tiongkok, pengikut Konfusius yang memiliki pandangan berbeda tentang sifat manusia. Ia berpendapat bahwa manusia pada dasarnya jahat dan membutuhkan pendidikan dan ritual untuk menjadi baik. Karyanya 'Xunzi' sangat sistematis dan berpengaruh.",
             keyThoughts: [{
                 point: "Manusia pada Dasarnya Jahat",
@@ -1929,6 +2057,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "B",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Buddha_Siddhartha_Gautama.jpg/150px-Buddha_Siddhartha_Gautama.jpg",
             bio: "Siddhartha Gautama (563–483 SM) adalah pendiri Buddhisme. Ia lahir sebagai pangeran di Nepal, tetapi meninggalkan istana untuk mencari pencerahan. Setelah bermeditasi, ia mencapai pencerahan dan menjadi Buddha. Ajarannya tentang Empat Kebenaran Mulia dan Jalan Tengah adalah inti dari Buddhisme.",
             keyThoughts: [{
                 point: "Empat Kebenaran Mulia",
@@ -1962,6 +2091,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "N",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Nagarjuna.jpg/150px-Nagarjuna.jpg",
             bio: "Nagarjuna (150–250 M) adalah filsuf India, pendiri aliran Madhyamaka dalam Buddhisme Mahayana. Ia mengembangkan konsep 'Sunyata' (kekosongan) dan logika dialektis untuk membongkar semua pandangan metafisik. Karyanya 'Mulamadhyamakakarika' adalah teks fundamental.",
             keyThoughts: [{
                 point: "Sunyata (Kekosongan)",
@@ -1995,6 +2125,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "S",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Adi_Shankara.jpg/150px-Adi_Shankara.jpg",
             bio: "Shankara (788–820 M) adalah filsuf India, tokoh utama Advaita Vedanta. Ia mengajarkan bahwa realitas tertinggi adalah Brahman (kesadaran murni) dan bahwa dunia adalah ilusi (maya). Shankara menulis komentar tentang Upanishad, Bhagavad Gita, dan Brahma Sutra.",
             keyThoughts: [{
                 point: "Advaita (Non-Dualitas)",
@@ -2028,6 +2159,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "R",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Ramanuja.jpg/150px-Ramanuja.jpg",
             bio: "Ramanuja (1017–1137 M) adalah filsuf India, tokoh utama Vishishtadvaita (non-dualisme yang berkualitas). Ia mengajarkan bahwa Brahman adalah realitas tertinggi, tetapi memiliki atribut dan jiwa-jiwa individu adalah bagian dari Brahman. Ramanuja menekankan bhakti (devosi) sebagai jalan pembebasan.",
             keyThoughts: [{
                 point: "Vishishtadvaita (Non-Dualitas yang Berkualitas)",
@@ -2061,6 +2193,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "I",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Avicenna%2C_medical_manuscript_%28wellcome%29.jpg/150px-Avicenna%2C_medical_manuscript_%28wellcome%29.jpg",
             bio: "Ibnu Sina (980–1037) adalah filsuf, ilmuwan, dan dokter Persia. Ia adalah salah satu filsuf Islam terbesar, dikenal dengan 'The Book of Healing' dan 'Canon of Medicine'. Ibnu Sina mengembangkan filsafat berbasis Aristoteles dengan pengaruh Neoplatonisme.",
             keyThoughts: [{
                 point: "Eksistensi dan Esensi",
@@ -2094,6 +2227,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "I",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Averroes_portrait.jpg/150px-Averroes_portrait.jpg",
             bio: "Ibnu Rushd (1126–1198) adalah filsuf, dokter, dan ahli hukum Islam dari Andalusia. Ia dikenal karena komentarnya tentang Aristoteles, yang mempengaruhi filsafat Eropa. Ia membela filsafat melawan teologi dan mengajarkan bahwa iman dan akal tidak bertentangan.",
             keyThoughts: [{
                 point: "Harmoni antara Iman dan Akal",
@@ -2127,6 +2261,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "A",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Al-Farabi_%28crop%29.jpg/150px-Al-Farabi_%28crop%29.jpg",
             bio: "Al-Farabi (872–950) adalah filsuf Islam dari Persia, dikenal sebagai 'Guru Kedua' setelah Aristoteles. Ia menggabungkan filsafat Plato dan Aristoteles dengan Islam. Karyanya tentang negara ideal dan logika sangat berpengaruh.",
             keyThoughts: [{
                 point: "Negara Ideal (Al-Madina al-Fadila)",
@@ -2160,6 +2295,7 @@
             era: "Kuno",
             region: "Timur",
             avatar: "M",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Mulla_Sadra.jpg/150px-Mulla_Sadra.jpg",
             bio: "Mulla Sadra (1571–1640) adalah filsuf Persia, pendiri aliran filsafat transendental (Hikmah Muta'aliyah). Ia menggabungkan peripatetik, iluminasi, dan mistisisme. Karyanya 'The Transcendent Philosophy' mengajarkan tentang 'gerakan substansial' dan 'kesatuan wujud'.",
             keyThoughts: [{
                 point: "Gerakan Substansial (Harakah Jawhariyyah)",
@@ -2193,6 +2329,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "N",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Noam_Chomsky_%282017%29.jpg/150px-Noam_Chomsky_%282017%29.jpg",
             bio: "Noam Chomsky (1928–) adalah filsuf, linguis, dan aktivis politik Amerika. Ia adalah tokoh utama linguistik generatif dan juga kritikus keras kebijakan luar negeri AS. Karyanya tentang tata bahasa transformasional dan kritik media sangat berpengaruh.",
             keyThoughts: [{
                 point: "Tata Bahasa Generatif",
@@ -2226,6 +2363,7 @@
             era: "Modern",
             region: "Barat",
             avatar: "S",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Slavoj_%C5%BDi%C5%BEek_2015.jpg/150px-Slavoj_%C5%BDi%C5%BEek_2015.jpg",
             bio: "Slavoj Žižek (1949–) adalah filsuf Slovenia, tokoh utama kritik ideologi dan psikoanalisis Lacan. Karyanya menggabungkan Hegel, Marx, dan Lacan. Žižek menulis tentang ideologi, kapitalisme, dan politik, dengan gaya yang provokatif dan humoris.",
             keyThoughts: [{
                 point: "Ideologi dan Sinisme",
@@ -2253,14 +2391,50 @@
                 { title: "Stanford Encyclopedia - Žižek", url: "https://plato.stanford.edu/entries/zizek/" },
                 { title: "Wikipedia - Slavoj Žižek", url: "https://id.wikipedia.org/wiki/Slavoj_%C5%BDi%C5%BEek" }
             ]
-        }];
+        },
+        // ========== TAMBAHAN THOMAS HOBBES (FILSUF KE-51) ==========
+        {
+            id: "hobbes",
+            name: "Thomas Hobbes",
+            era: "Modern",
+            region: "Barat",
+            avatar: "T",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Thomas_Hobbes_%28portrait%29.jpg/150px-Thomas_Hobbes_%28portrait%29.jpg",
+            bio: "Thomas Hobbes (1588–1679) adalah filsuf Inggris, tokoh utama filsafat politik modern. Karyanya 'Leviathan' (1651) meletakkan dasar teori kontrak sosial dan negara absolut. Hobbes berpendapat bahwa dalam keadaan alamiah, hidup manusia 'solitary, poor, nasty, brutish, and short'. Untuk menghindari perang semua melawan semua, manusia menyerahkan haknya kepada penguasa absolut (Leviathan) demi perdamaian dan keamanan.",
+            keyThoughts: [{
+                point: "Keadaan Alamiah (State of Nature)",
+                explanation: "Hobbes menggambarkan keadaan alamiah sebagai perang semua melawan semua. Tanpa otoritas pusat, setiap orang akan berusaha mempertahankan diri dan mengambil milik orang lain. Hidup menjadi tidak aman dan penuh ketakutan.",
+                dailyLifeStory: "Di sebuah lingkungan tanpa aturan yang jelas, warga saling berebut sumber daya dan takut diserang. Keamanan hilang, dan setiap orang hanya mengandalkan kekuatan sendiri. Hobbes mengatakan inilah yang terjadi tanpa negara."
+            }, {
+                point: "Kontrak Sosial dan Leviathan",
+                explanation: "Untuk keluar dari keadaan alamiah, manusia membuat kontrak sosial: mereka menyerahkan hak alami mereka kepada seorang penguasa (Leviathan) yang memiliki kekuasaan absolut. Penguasa ini menjamin perdamaian dan keamanan dengan memaksa semua orang untuk menaati hukum.",
+                dailyLifeStory: "Warga sebuah desa yang sering terjadi konflik akhirnya sepakat memilih seorang kepala adat yang kuat. Mereka memberi kepala adat wewenang untuk menghakimi dan memberi sanksi. Ketenangan pun kembali."
+            }, {
+                point: "Manusia Egois dan Rasional",
+                explanation: "Hobbes berpendapat bahwa manusia pada dasarnya egois dan didorong oleh keinginan untuk mempertahankan diri (self-preservation). Namun, manusia juga rasional dan menyadari bahwa perdamaian lebih baik daripada perang. Akal budi mengajarkan kita untuk mencari perdamaian.",
+                dailyLifeStory: "Seorang pengusaha yang sangat ambisius dan kompetitif, tetapi ia sadar bahwa bekerja sama dengan pesaingnya akan menghasilkan keuntungan jangka panjang. Ia memilih kerja sama demi stabilitas bisnis."
+            }, {
+                point: "Kekuasaan Mutlak Penguasa",
+                explanation: "Menurut Hobbes, kekuasaan penguasa harus mutlak dan tidak dapat diganggu gugat. Jika rakyat dapat menggulingkan penguasa, kontrak sosial akan batal dan keadaan alamiah kembali. Karena itu, penguasa memiliki hak atas segala sesuatu kecuali hak untuk membunuh rakyatnya (jika rakyat melawan, itu bunuh diri).",
+                dailyLifeStory: "Di sebuah kerajaan, raja memiliki kekuasaan penuh untuk membuat undang-undang dan menegakkan keadilan. Rakyat tidak boleh memberontak karena itu akan mengembalikan mereka ke kondisi perang saudara."
+            }, {
+                point: "Hukum Alam dan Hak Alami",
+                explanation: "Hobbes membedakan antara hak alami (kebebasan untuk melakukan apa pun untuk mempertahankan diri) dan hukum alam (aturan akal yang melarang kita melakukan hal-hal yang merusak kehidupan). Hukum alam pertama adalah mencari perdamaian. Hukum alam kedua adalah melepaskan hak atas segala sesuatu jika orang lain juga melepaskannya.",
+                dailyLifeStory: "Seorang pedagang yang memiliki hak untuk melindungi dagangannya dengan senjata, tetapi demi perdamaian, ia setuju untuk tidak menggunakan kekerasan asalkan pedagang lain juga berkomitmen pada perdamaian. Ini adalah transaksi sosial yang rasional."
+            }],
+            sources: [
+                { title: "Hobbes, 'Leviathan'", url: "https://id.wikipedia.org/wiki/Leviathan_(buku)" },
+                { title: "Stanford Encyclopedia - Hobbes", url: "https://plato.stanford.edu/entries/hobbes/" },
+                { title: "Wikipedia - Thomas Hobbes", url: "https://id.wikipedia.org/wiki/Thomas_Hobbes" }
+            ]
+        }
+        ];
 
         // ============================================================
         // 3. FUNGSI UTAMA
         // ============================================================
 
         let allPhilosophers = [];
-        let filteredPhilosophers = [];
         let currentFilter = 'all';
 
         const grid = document.getElementById('gridContainer');
@@ -2273,7 +2447,6 @@
         const seedBtn = document.getElementById('seedBtn');
         const toast = document.getElementById('toast');
 
-        // --- Toast ---
         function showToast(msg, duration = 3000) {
             toast.textContent = msg;
             toast.classList.add('show');
@@ -2281,7 +2454,6 @@
             toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // --- Render Kartu ---
         function renderCards(list) {
             if (!list || list.length === 0) {
                 grid.innerHTML = `<div class="empty-state">🔍 Tidak ditemukan filsuf yang cocok.</div>`;
@@ -2292,10 +2464,13 @@
             list.forEach(p => {
                 const bioShort = p.bio.length > 180 ? p.bio.slice(0, 180) + '…' : p.bio;
                 const tags = [p.era, p.region];
+                const avatarContent = p.image ?
+                    `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'">` :
+                    p.avatar || p.name[0];
                 html += `
                     <div class="card" data-id="${p.id}">
                         <div class="card-header">
-                            <div class="avatar">${p.avatar || p.name[0]}</div>
+                            <div class="avatar">${avatarContent}</div>
                             <div class="name-group">
                                 <h3>${p.name}</h3>
                                 <div class="era">${p.era} • ${p.region}</div>
@@ -2307,7 +2482,7 @@
                         </div>
                         <div class="bio-preview">${bioShort}</div>
                         <div class="card-footer">
-                            <span class="read-more">Baca selengkapnya →</span>
+                            <span class="read-more">Baca selengkapnya</span>
                             <span class="thought-count">${p.keyThoughts?.length || 0} konsep</span>
                         </div>
                     </div>
@@ -2316,7 +2491,6 @@
             grid.innerHTML = html;
             countBadge.textContent = `${list.length} filsuf`;
 
-            // Event klik kartu
             document.querySelectorAll('.card').forEach(el => {
                 el.addEventListener('click', () => {
                     const id = el.dataset.id;
@@ -2326,17 +2500,12 @@
             });
         }
 
-        // --- Filter & Search ---
         function filterAndRender() {
             const query = searchInput.value.trim().toLowerCase();
             let filtered = allPhilosophers;
-
-            // Filter region
             if (currentFilter !== 'all') {
                 filtered = filtered.filter(p => p.region === currentFilter || p.era === currentFilter);
             }
-
-            // Search
             if (query) {
                 filtered = filtered.filter(p =>
                     p.name.toLowerCase().includes(query) ||
@@ -2347,12 +2516,9 @@
                     )
                 );
             }
-
-            filteredPhilosophers = filtered;
             renderCards(filtered);
         }
 
-        // --- Event Listeners ---
         searchInput.addEventListener('input', filterAndRender);
 
         filterGroup.addEventListener('click', (e) => {
@@ -2377,7 +2543,6 @@
             document.body.style.overflow = '';
         }
 
-        // --- Buka Modal ---
         function openModal(data) {
             const thoughts = data.keyThoughts || [];
             let thoughtsHtml = '';
@@ -2395,12 +2560,13 @@
                 `<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`
             ).join('');
 
-            // Hitung perkiraan kata
-            const wordCount = estimateWordCount(data);
+            const bigAvatarContent = data.image ?
+                `<img src="${data.image}" alt="${data.name}" onerror="this.style.display='none'">` :
+                data.avatar || data.name[0];
 
             modalBody.innerHTML = `
                 <div class="modal-header">
-                    <div class="big-avatar">${data.avatar || data.name[0]}</div>
+                    <div class="big-avatar">${bigAvatarContent}</div>
                     <div class="title-group">
                         <h2>${data.name}</h2>
                         <div class="meta">${data.era} • ${data.region}</div>
@@ -2419,7 +2585,7 @@
                         <h3><span class="emoji">🔗</span> Sumber Referensi</h3>
                         <div class="sources-list">${sourcesHtml || '—'}</div>
                     </section>
-                    <div class="word-count">📝 Perkiraan total: ~${wordCount.toLocaleString()} kata</div>
+                    <div class="word-count">📝 Perkiraan total: ~${estimateWordCount(data).toLocaleString()} kata</div>
                 </div>
             `;
             modalOverlay.classList.add('open');
@@ -2428,27 +2594,21 @@
             if (modalBody.parentElement) modalBody.parentElement.scrollTop = 0;
         }
 
-        // --- Estimasi kata (perkiraan dari data) ---
         function estimateWordCount(data) {
             let total = 0;
-            const bioWords = data.bio.split(/\s+/).length;
-            total += bioWords;
+            total += data.bio.split(/\s+/).length;
             (data.keyThoughts || []).forEach(t => {
                 total += t.point.split(/\s+/).length;
                 total += t.explanation.split(/\s+/).length;
                 if (t.dailyLifeStory) total += t.dailyLifeStory.split(/\s+/).length;
             });
-            // Tambahan untuk struktur
             total += 50;
-            // Target 5000 kata per filsuf, kita skala
-            // Data kita sudah cukup besar, kita kalikan dengan faktor 4
             const scaled = Math.round(total * 1.2);
             return Math.max(scaled, 2000);
         }
 
-        // --- SEED DATA ke Firebase ---
         async function seedData() {
-            if (!confirm('Seed data akan mengunggah 50 filsuf ke Firebase. Lanjutkan?')) return;
+            if (!confirm('Seed data akan mengunggah 51 filsuf ke Firebase. Lanjutkan?')) return;
             seedBtn.disabled = true;
             seedBtn.textContent = '⏳ Mengunggah...';
             try {
@@ -2471,7 +2631,6 @@
             }
         }
 
-        // --- Load Data dari Firebase ---
         async function loadData() {
             grid.innerHTML = `
                 <div class="loading-state">
@@ -2482,13 +2641,11 @@
             try {
                 const snapshot = await db.collection('philosophers').get();
                 if (snapshot.empty) {
-                    // Belum ada data, gunakan data lokal sementara
                     allPhilosophers = PHILOSOPHERS_DATA;
                     showToast('📚 Data lokal dimuat. Klik "Seed Data" untuk simpan ke Firebase.', 4000);
                 } else {
                     const list = [];
                     snapshot.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
-                    // Pastikan urutan sesuai dengan PHILOSOPHERS_DATA
                     const ordered = [];
                     PHILOSOPHERS_DATA.forEach(p => {
                         const found = list.find(d => d.id === p.id);
@@ -2505,15 +2662,12 @@
             }
         }
 
-        // --- Seed button ---
         seedBtn.addEventListener('click', seedData);
-
-        // --- INIT ---
         loadData();
 
-        // Jika pengguna ingin langsung seed, tombol sudah siap.
         console.log('📚 Filsafat Nusantara siap!');
         console.log(`📖 ${PHILOSOPHERS_DATA.length} filsuf dimuat.`);
     </script>
+
 </body>
 </html>
